@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Fathu Dives">
+  <rect width="180" height="180" rx="38" fill="#023576"/>
+  <g fill="none" stroke="#d6d6d4" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M48 71h61c23 0 38 16 38 39v16H116"/>
+    <path d="M116 126h31"/>
+    <path d="M83 83v18c0 15-10 27-25 27s-27-12-27-27 12-27 27-27h46c15 0 27 12 27 27s-12 27-27 27-25-12-25-27V83"/>
+    <path d="m48 109 14-22M96 109l14-22"/>
+  </g>
+  <circle cx="116" cy="126" r="13" fill="#d6d6d4"/>
+  <circle cx="91" cy="47" r="7" fill="#d6d6d4"/>
+  <circle cx="78" cy="30" r="5" fill="#d6d6d4"/>
+  <circle cx="98" cy="17" r="4" fill="#d6d6d4"/>
+</svg>

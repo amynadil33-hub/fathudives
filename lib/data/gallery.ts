@@ -1,0 +1,128 @@
+import type { GalleryItem, GalleryCategory } from '@/lib/types'
+import { media } from '@/lib/media'
+
+export const galleryCategories: GalleryCategory[] = [
+  'Underwater',
+  'Whale Sharks',
+  'Mantas',
+  'Dhangethi',
+  'Guests',
+  'Boat Life',
+  'Island Sunsets',
+]
+
+// NOTE: Placeholder gallery. Videos use poster images only — no video files are
+// committed. When real media arrives, set mediaType: 'video' and add videoUrl
+// (hosted externally / Supabase Storage) plus posterUrl.
+
+export const galleryItems: GalleryItem[] = [
+  {
+    id: 'g-1',
+    title: 'Sunlit reef',
+    mediaType: 'image',
+    imageUrl: media.experiences.reef,
+    category: 'Underwater',
+    caption: 'Morning light over a South Ari reef garden.',
+    featured: true,
+  },
+  {
+    id: 'g-2',
+    title: 'Gentle giant',
+    mediaType: 'image',
+    imageUrl: media.experiences.whaleShark,
+    category: 'Whale Sharks',
+    caption: 'A whale shark cruising the South Ari shallows.',
+    featured: true,
+  },
+  {
+    id: 'g-3',
+    title: 'Whale shark encounter',
+    mediaType: 'video',
+    imageUrl: media.packages.whaleShark,
+    posterUrl: media.packages.whaleShark,
+    category: 'Whale Sharks',
+    caption: 'Video placeholder — client footage to be added.',
+    featured: false,
+  },
+  {
+    id: 'g-4',
+    title: 'Manta in flight',
+    mediaType: 'image',
+    imageUrl: media.experiences.manta,
+    category: 'Mantas',
+    caption: 'A manta glides over the cleaning station.',
+    featured: true,
+  },
+  {
+    id: 'g-5',
+    title: 'Island lane',
+    mediaType: 'image',
+    imageUrl: media.island.lane,
+    category: 'Dhangethi',
+    caption: 'Quiet palm-lined lanes of Dhangethi.',
+    featured: false,
+  },
+  {
+    id: 'g-6',
+    title: 'Beach morning',
+    mediaType: 'image',
+    imageUrl: media.island.beach,
+    category: 'Dhangethi',
+    caption: 'White sand and turquoise lagoon.',
+    featured: true,
+  },
+  {
+    id: 'g-7',
+    title: 'Learning to dive',
+    mediaType: 'image',
+    imageUrl: media.experiences.learn,
+    category: 'Guests',
+    caption: 'First breaths underwater with our team.',
+    featured: false,
+  },
+  {
+    id: 'g-8',
+    title: 'On the dhoni',
+    mediaType: 'image',
+    imageUrl: media.island.boats,
+    category: 'Boat Life',
+    caption: 'Heading out on a traditional dhoni.',
+    featured: false,
+  },
+  {
+    id: 'g-9',
+    title: 'Harbour sunset',
+    mediaType: 'image',
+    imageUrl: media.island.sunset,
+    category: 'Island Sunsets',
+    caption: 'Golden hour over the Dhangethi harbour.',
+    featured: true,
+  },
+  {
+    id: 'g-10',
+    title: 'Channel drift',
+    mediaType: 'image',
+    imageUrl: media.sites.channel,
+    category: 'Underwater',
+    caption: 'Drifting a South Ari channel.',
+    featured: false,
+  },
+  {
+    id: 'g-11',
+    title: 'Coral thila',
+    mediaType: 'image',
+    imageUrl: media.sites.thila,
+    category: 'Underwater',
+    caption: 'A pinnacle alive with soft corals.',
+    featured: false,
+  },
+  {
+    id: 'g-12',
+    title: 'Island escape',
+    mediaType: 'image',
+    imageUrl: media.packages.escape,
+    category: 'Dhangethi',
+    caption: 'Slow island days between dives.',
+    featured: false,
+  },
+]
