@@ -2,7 +2,6 @@
 
 import { revalidatePath } from 'next/cache'
 import { getAdminUser } from '@/lib/auth'
-import { saveUpload } from '@/lib/uploads'
 import {
   createGalleryItem,
   updateGalleryItem,
@@ -34,25 +33,14 @@ export async function createGallery(formData: FormData): Promise<ActionResult> {
   const { title, category, caption, mediaType, featured } = readCommonFields(formData)
   if (!title) return { error: 'A title is required.' }
 
-  const imageFile = formData.get('image')
-  const videoFile = formData.get('video')
+  // Files are uploaded on the client via /api/upload; only URLs arrive here.
+  const imageUrl = String(formData.get('imageUrl') ?? '').trim()
+  const videoUrl = String(formData.get('videoUrl') ?? '').trim() || undefined
+  const posterUrl = mediaType === 'video' ? imageUrl || undefined : undefined
 
   try {
-    let imageUrl = String(formData.get('imageUrl') ?? '').trim()
-    let videoUrl: string | undefined
-    let posterUrl: string | undefined
-
-    if (imageFile instanceof File && imageFile.size > 0) {
-      imageUrl = await saveUpload(imageFile, 'image')
-    }
-    if (mediaType === 'video') {
-      posterUrl = imageUrl || undefined
-      if (videoFile instanceof File && videoFile.size > 0) {
-        videoUrl = await saveUpload(videoFile, 'video')
-      }
-    }
-
     if (!imageUrl) return { error: 'Please upload an image (used as the thumbnail/poster).' }
+    if (mediaType === 'video' && !videoUrl) return { error: 'Please upload a video file.' }
 
     await createGalleryItem({
       title,
@@ -78,19 +66,19 @@ export async function updateGallery(id: string, formData: FormData): Promise<Act
   const { title, category, caption, mediaType, featured } = readCommonFields(formData)
   if (!title) return { error: 'A title is required.' }
 
-  const imageFile = formData.get('image')
-  const videoFile = formData.get('video')
+  // Files are uploaded on the client via /api/upload; only URLs arrive here.
+  const imageUrl = String(formData.get('imageUrl') ?? '').trim()
+  const videoUrl = String(formData.get('videoUrl') ?? '').trim()
 
   try {
     const patch: Record<string, unknown> = { title, category, caption, mediaType, featured }
 
-    if (imageFile instanceof File && imageFile.size > 0) {
-      const url = await saveUpload(imageFile, 'image')
-      patch.imageUrl = url
-      if (mediaType === 'video') patch.posterUrl = url
+    if (imageUrl) {
+      patch.imageUrl = imageUrl
+      if (mediaType === 'video') patch.posterUrl = imageUrl
     }
-    if (mediaType === 'video' && videoFile instanceof File && videoFile.size > 0) {
-      patch.videoUrl = await saveUpload(videoFile, 'video')
+    if (mediaType === 'video' && videoUrl) {
+      patch.videoUrl = videoUrl
     }
 
     const updated = await updateGalleryItem(id, patch)

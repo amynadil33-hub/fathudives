@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/select'
 import { EmptyState } from './admin-ui'
 import { createGallery, updateGallery, removeGallery, toggleGalleryFeatured } from '@/app/actions/gallery'
+import { uploadFile } from '@/lib/upload-client'
 
 export function GalleryManager({
   items,
@@ -206,13 +207,30 @@ function GalleryDialog({
     fd.set('mediaType', mediaType)
     fd.set('featured', featured ? 'true' : 'false')
 
+    // Upload files via the Route Handler first, then send only URLs (strings)
+    // to the Server Action. Files are removed from the payload entirely.
+    const imageFile = imageRef.current?.files?.[0]
+    const videoFile = videoRef.current?.files?.[0]
+    fd.delete('image')
+    fd.delete('video')
+
     startTransition(async () => {
-      const res = isEdit ? await updateGallery(item!.id, fd) : await createGallery(fd)
-      if ('error' in res) {
-        toast.error(res.error)
-      } else {
-        toast.success(isEdit ? 'Item updated' : 'Item added')
-        onSaved()
+      try {
+        if (imageFile) {
+          fd.set('imageUrl', await uploadFile(imageFile, 'image'))
+        }
+        if (mediaType === 'video' && videoFile) {
+          fd.set('videoUrl', await uploadFile(videoFile, 'video'))
+        }
+        const res = isEdit ? await updateGallery(item!.id, fd) : await createGallery(fd)
+        if ('error' in res) {
+          toast.error(res.error)
+        } else {
+          toast.success(isEdit ? 'Item updated' : 'Item added')
+          onSaved()
+        }
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Upload failed. Please try again.')
       }
     })
   }

@@ -7,6 +7,7 @@ import { toast } from 'sonner'
 import { Upload, RotateCcw, Loader2, ImageIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { replaceMediaImage, resetMediaImage } from '@/app/actions/media'
+import { uploadFile } from '@/lib/upload-client'
 import type { MediaEntry, MediaGroup } from '@/lib/media'
 
 export type ResolvedMediaEntry = MediaEntry & { src: string; overridden: boolean }
@@ -46,19 +47,23 @@ function MediaCard({ entry }: { entry: ResolvedMediaEntry }) {
   function onFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    const formData = new FormData()
-    formData.set('file', file)
     setAction('upload')
     startTransition(async () => {
-      const res = await replaceMediaImage(entry.key, formData)
-      setAction(null)
-      if ('error' in res) {
-        toast.error(res.error)
-      } else {
-        toast.success(`${entry.label} updated`)
-        router.refresh()
+      try {
+        const url = await uploadFile(file, 'image')
+        const res = await replaceMediaImage(entry.key, url)
+        if ('error' in res) {
+          toast.error(res.error)
+        } else {
+          toast.success(`${entry.label} updated`)
+          router.refresh()
+        }
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : 'Upload failed. Please try again.')
+      } finally {
+        setAction(null)
+        if (inputRef.current) inputRef.current.value = ''
       }
-      if (inputRef.current) inputRef.current.value = ''
     })
   }
 
