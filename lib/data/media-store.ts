@@ -2,6 +2,7 @@ import 'server-only'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { media, mediaRegistry } from '@/lib/media'
+import { DATA_DIR } from './data-dir'
 
 /**
  * Persisted media overrides.
@@ -12,7 +13,6 @@ import { media, mediaRegistry } from '@/lib/media'
  * below for table queries without touching any call site.
  */
 
-const DATA_DIR = path.join(process.cwd(), '.data')
 const OVERRIDES_FILE = path.join(DATA_DIR, 'media-overrides.json')
 
 type Overrides = Record<string, string>

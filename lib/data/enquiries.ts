@@ -3,12 +3,12 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import type { Enquiry, EnquiryInput, EnquiryStatus } from '@/lib/types'
 import { createClient } from '@/lib/supabase/server'
+import { DATA_DIR } from './data-dir'
 
 // Development fallback store. When Supabase is configured, all reads/writes go
 // through it instead. When it is not, enquiries persist to a JSON file on disk
 // so the Bookings CMS stays functional and keeps data across requests.
 
-const DATA_DIR = path.join(process.cwd(), '.data')
 const ENQUIRIES_FILE = path.join(DATA_DIR, 'enquiries.json')
 
 // A few realistic sample bookings so the admin has data to work with before

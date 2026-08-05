@@ -4,6 +4,7 @@ import path from 'path'
 import { randomUUID } from 'crypto'
 import type { GalleryItem } from '@/lib/types'
 import { galleryItems as seedItems } from './gallery'
+import { DATA_DIR } from './data-dir'
 
 /**
  * Persisted gallery store.
@@ -12,7 +13,6 @@ import { galleryItems as seedItems } from './gallery'
  * edits to disk. Swap these helpers for Supabase queries when connected.
  */
 
-const DATA_DIR = path.join(process.cwd(), '.data')
 const GALLERY_FILE = path.join(DATA_DIR, 'gallery.json')
 
 async function readAll(): Promise<GalleryItem[]> {

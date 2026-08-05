@@ -10,7 +10,11 @@ export async function proxy(request: NextRequest) {
 
   const response = NextResponse.next({ request })
 
-  if (!url || !anonKey) return response
+  // Only touch Supabase when it is explicitly enabled AND configured. This
+  // avoids paying a DNS/connection timeout on every request when stale env
+  // vars point to a dead project. Enable with NEXT_PUBLIC_SUPABASE_ENABLED=true.
+  const enabled = process.env.NEXT_PUBLIC_SUPABASE_ENABLED === 'true'
+  if (!enabled || !url || !anonKey) return response
 
   const supabase = createServerClient(url, anonKey, {
     global: {

@@ -2,16 +2,23 @@ import 'server-only'
 import { promises as fs } from 'fs'
 import path from 'path'
 import { randomUUID } from 'crypto'
+import { UPLOAD_DIR } from '@/lib/data/data-dir'
+
+export { UPLOAD_DIR }
 
 /**
- * Save an uploaded file to /public/uploads and return its public path.
+ * Save an uploaded file to a data directory and return a public path served by
+ * the `/uploads/[...path]` route handler.
  *
- * This is the local-development storage strategy. When Vercel Blob or Supabase
- * Storage is connected, replace the body of `saveUpload` with an upload to that
- * provider and return the resulting public URL — callers stay unchanged.
+ * IMPORTANT: uploads are intentionally written OUTSIDE `public/`. Writing into
+ * `public/` during `next dev` trips the file watcher and tears down the server
+ * mid-request (the upload's Server Action fails with "Failed to fetch"). A
+ * sibling data dir avoids that and is closer to how production storage behaves.
+ *
+ * When Vercel Blob or Supabase Storage is connected, replace the body of
+ * `saveUpload` with an upload to that provider and return the resulting public
+ * URL — callers stay unchanged.
  */
-
-const UPLOAD_DIR = path.join(process.cwd(), 'public', 'uploads')
 
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif', 'image/svg+xml']
 const VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime']

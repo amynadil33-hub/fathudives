@@ -2,14 +2,35 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from './types'
 
-// Process-level reachability cache. Supabase env vars may be present but point
-// to an unreachable / stale project. Rather than block every request on a slow
+// Reachability cache. Supabase env vars may be present but point to an
+// unreachable / stale project. Rather than block every request on a slow
 // DNS/connection timeout, we remember the first failure and thereafter treat
 // Supabase as "not configured" so the app falls back to its disk/mock data.
 //   null  = unknown (not probed yet)
 //   true  = reachable
-//   false = unreachable (skip Supabase for the rest of this process)
-let supabaseReachable: boolean | null = null
+//   false = unreachable (skip Supabase from now on)
+//
+// Stored on globalThis so the cached result survives dev-mode HMR recompiles,
+// which would otherwise reset module-level state and re-incur the timeout on
+// every code change.
+const globalForSupabase = globalThis as unknown as {
+  __supabaseReachable?: boolean | null
+}
+function getReachable(): boolean | null {
+  return globalForSupabase.__supabaseReachable ?? null
+}
+function setReachable(value: boolean) {
+  globalForSupabase.__supabaseReachable = value
+}
+
+// Explicit opt-in gate. The project may carry stale Supabase env vars that
+// point to a dead project (which would make every request pay a DNS timeout).
+// We therefore only use Supabase when it is explicitly enabled — set
+// NEXT_PUBLIC_SUPABASE_ENABLED=true once a real, reachable project is connected.
+// While disabled, the app runs entirely on its disk/mock data layer.
+export function supabaseEnabled(): boolean {
+  return process.env.NEXT_PUBLIC_SUPABASE_ENABLED === 'true'
+}
 
 // How long a single Supabase request may take before we consider the project
 // unreachable. Kept short so a dead URL never freezes the UI.
@@ -23,10 +44,10 @@ const timedFetch: typeof fetch = async (input, init) => {
       ...init,
       signal: AbortSignal.timeout(SUPABASE_TIMEOUT_MS),
     })
-    supabaseReachable = true
+    setReachable(true)
     return res
   } catch (err) {
-    supabaseReachable = false
+    setReachable(false)
     throw err
   }
 }
@@ -40,7 +61,8 @@ export async function createClient() {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!url || !anonKey) return null
-  if (supabaseReachable === false) return null
+  if (!supabaseEnabled()) return null
+  if (getReachable() === false) return null
 
   const cookieStore = await cookies()
 
@@ -71,7 +93,8 @@ export function createAdminClient() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!url || !serviceKey) return null
-  if (supabaseReachable === false) return null
+  if (!supabaseEnabled()) return null
+  if (getReachable() === false) return null
 
   return createServerClient<Database>(url, serviceKey, {
     global: { fetch: timedFetch },

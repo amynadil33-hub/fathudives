@@ -13,3 +13,6 @@ __v0_jsx-dev-runtime.ts
 node_modules
 .next/
 .DS_Store
+
+# Local CMS data + uploads (disk fallback before a database/storage is connected)
+.data/
