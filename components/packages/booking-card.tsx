@@ -7,6 +7,7 @@ import { CtaLink } from '@/components/site/cta-button'
 import { formatPrice } from '@/lib/utils'
 import { siteConfig, whatsappHref } from '@/lib/site-config'
 import type { Package } from '@/lib/types'
+import { AddToCartButton } from '@/components/cart/add-to-cart-button'
 
 const DIVER_LEVELS = [
   'Not yet certified',
@@ -132,11 +133,13 @@ export function BookingCard({ pkg }: { pkg: Package }) {
         </label>
       </div>
 
+      <AddToCartButton pkg={pkg} guests={guests} className="mt-6 w-full py-3" />
+
       <CtaLink
         href={`/contact?${params.toString()}`}
         variant="coral"
         size="lg"
-        className="mt-6 w-full"
+        className="mt-3 w-full"
       >
         Submit Enquiry
         <ChevronRight className="size-4" />

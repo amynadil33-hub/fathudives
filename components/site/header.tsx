@@ -9,6 +9,7 @@ import { navLinks, siteConfig } from '@/lib/site-config'
 import { Logo } from './logo'
 import { CtaLink } from './cta-button'
 import { cn } from '@/lib/utils'
+import { CartLink } from '@/components/cart/cart-link'
 
 export function Header() {
   const pathname = usePathname()
@@ -84,6 +85,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
+          <CartLink onDark={onDark} />
           <CtaLink
             href="/contact"
             variant={onDark ? 'ghost-light' : 'coral'}

@@ -29,14 +29,14 @@ export const media = {
   packages: {
     discover: '/images/pkg-discover.png',
     explorer: '/images/pkg-explorer.png',
-    whaleShark: '/images/pkg-whaleshark.png',
+    whaleShark: '/images/whale-shark.png',
     escape: '/images/pkg-escape.png',
   },
 
   island: {
-    beach: '/images/island-beach.png',
-    lane: '/images/island-lane.png',
-    sunset: '/images/island-sunset.png',
+    beach: '/images/dhangethi-aerial.png',
+    lane: '/images/dhangethi-aerial.png',
+    sunset: '/images/pkg-escape.png',
     boats: '/images/island-dhoni.png',
     aerial: '/images/dhangethi-aerial.png',
     dining: '/images/island-dining.png',
@@ -50,7 +50,7 @@ export const media = {
 
   trust: '/images/dive-briefing.png',
   about: '/images/about-team.png',
-  ctaSunset: '/images/island-sunset.png',
+  ctaSunset: '/images/pkg-escape.png',
 
   // Generic avatar placeholder for testimonials until guest photos arrive.
   avatar: '/images/guest-avatar.png',

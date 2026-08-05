@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Moon, Waves, BedDouble, Utensils, Plane, ArrowRight } from 'lucide-react'
 import type { Package } from '@/lib/types'
 import { formatPrice } from '@/lib/utils'
+import { AddToCartButton } from '@/components/cart/add-to-cart-button'
 
 export function PackageCard({ pkg }: { pkg: Package }) {
   return (
@@ -57,18 +58,21 @@ export function PackageCard({ pkg }: { pkg: Package }) {
           )}
         </ul>
 
-        <div className="mt-6 flex items-end justify-between border-t border-border pt-5">
-          <div>
-            <p className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">From (placeholder)</p>
-            <p className="font-serif text-2xl text-primary">{formatPrice(pkg.basePrice, pkg.currency)}</p>
+        <div className="mt-6 border-t border-border pt-5">
+          <div className="flex items-end justify-between">
+            <div>
+              <p className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">From (placeholder)</p>
+              <p className="font-serif text-2xl text-primary">{formatPrice(pkg.basePrice, pkg.currency)}</p>
+            </div>
+            <Link
+              href={`/dive-packages/${pkg.slug}`}
+              className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            >
+              View Package
+              <ArrowRight className="size-4" />
+            </Link>
           </div>
-          <Link
-            href={`/dive-packages/${pkg.slug}`}
-            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            View Package
-            <ArrowRight className="size-4" />
-          </Link>
+          <AddToCartButton pkg={pkg} className="mt-3 w-full" />
         </div>
       </div>
     </article>
