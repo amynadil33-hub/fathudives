@@ -10,8 +10,8 @@ export default async function AdminEnquiriesPage() {
   return (
     <div>
       <AdminHeader
-        title="Enquiries"
-        description="Review booking enquiries and move each one through your workflow."
+        title="Bookings"
+        description="Review booking enquiries, reply, and move each one through your workflow."
       />
       <EnquiriesTable enquiries={enquiries} />
     </div>

@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { updateEnquiryStatus } from '@/lib/data/enquiries'
+import { updateEnquiryStatus, deleteEnquiry } from '@/lib/data/enquiries'
 import { getAdminUser } from '@/lib/auth'
 import type { EnquiryStatus } from '@/lib/types'
 
@@ -16,5 +16,19 @@ export async function setEnquiryStatus(id: string, status: EnquiryStatus) {
     return { success: true }
   } catch {
     return { error: 'Could not update the enquiry. Please try again.' }
+  }
+}
+
+export async function removeEnquiry(id: string) {
+  const user = await getAdminUser()
+  if (!user) return { error: 'Not authorised.' }
+
+  try {
+    await deleteEnquiry(id)
+    revalidatePath('/admin/enquiries')
+    revalidatePath('/admin')
+    return { success: true }
+  } catch {
+    return { error: 'Could not delete the enquiry. Please try again.' }
   }
 }

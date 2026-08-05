@@ -9,6 +9,7 @@ import {
   GraduationCap,
   Anchor,
   Images,
+  ImagePlus,
   Quote,
   Settings,
   LogOut,
@@ -18,11 +19,12 @@ import { logout } from '@/app/actions/auth'
 
 const nav = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-  { label: 'Enquiries', href: '/admin/enquiries', icon: Inbox },
+  { label: 'Bookings', href: '/admin/enquiries', icon: Inbox },
   { label: 'Packages', href: '/admin/packages', icon: Package },
   { label: 'Courses', href: '/admin/courses', icon: GraduationCap },
   { label: 'Dive Sites', href: '/admin/dive-sites', icon: Anchor },
   { label: 'Gallery', href: '/admin/gallery', icon: Images },
+  { label: 'Images', href: '/admin/images', icon: ImagePlus },
   { label: 'Testimonials', href: '/admin/testimonials', icon: Quote },
   { label: 'Site Settings', href: '/admin/settings', icon: Settings },
 ]

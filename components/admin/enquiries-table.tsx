@@ -1,12 +1,15 @@
 'use client'
 
 import { Fragment, useState, useTransition } from 'react'
-import { ChevronDown, Inbox, Loader2 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import { ChevronDown, Inbox, Loader2, Trash2 } from 'lucide-react'
 import type { Enquiry, EnquiryStatus } from '@/lib/types'
 import { ENQUIRY_STATUS_LABELS } from '@/lib/constants'
-import { setEnquiryStatus } from '@/app/actions/admin'
+import { setEnquiryStatus, removeEnquiry } from '@/app/actions/admin'
 import { EnquiryStatusBadge } from './enquiry-status-badge'
 import { EmptyState } from './admin-ui'
+import { Button } from '@/components/ui/button'
 import { formatDate } from '@/lib/utils'
 import {
   Select,
@@ -23,14 +26,38 @@ export function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
   const [pendingId, setPendingId] = useState<string | null>(null)
+  const router = useRouter()
 
   const filtered = filter === 'all' ? enquiries : enquiries.filter((e) => e.status === filter)
+  const counts = enquiries.reduce(
+    (acc, e) => {
+      acc[e.status] = (acc[e.status] ?? 0) + 1
+      return acc
+    },
+    {} as Record<EnquiryStatus, number>,
+  )
 
   function changeStatus(id: string, status: EnquiryStatus) {
     setPendingId(id)
     startTransition(async () => {
-      await setEnquiryStatus(id, status)
+      const res = await setEnquiryStatus(id, status)
       setPendingId(null)
+      if (res && 'error' in res) toast.error(res.error)
+      else toast.success(`Marked ${ENQUIRY_STATUS_LABELS[status].toLowerCase()}`)
+    })
+  }
+
+  function onDelete(e: Enquiry) {
+    if (!confirm(`Delete the booking from ${e.fullName}? This cannot be undone.`)) return
+    setPendingId(e.id)
+    startTransition(async () => {
+      const res = await removeEnquiry(e.id)
+      setPendingId(null)
+      if (res && 'error' in res) toast.error(res.error)
+      else {
+        toast.success('Booking deleted')
+        router.refresh()
+      }
     })
   }
 
@@ -47,19 +74,29 @@ export function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap gap-2">
-        {(['all', ...STATUSES] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setFilter(s)}
-            className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-              filter === s
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-card text-muted-foreground hover:bg-muted'
-            }`}
-          >
-            {s === 'all' ? 'All' : ENQUIRY_STATUS_LABELS[s]}
-          </button>
-        ))}
+        {(['all', ...STATUSES] as const).map((s) => {
+          const count = s === 'all' ? enquiries.length : (counts[s] ?? 0)
+          return (
+            <button
+              key={s}
+              onClick={() => setFilter(s)}
+              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                filter === s
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-card text-muted-foreground hover:bg-muted'
+              }`}
+            >
+              {s === 'all' ? 'All' : ENQUIRY_STATUS_LABELS[s]}
+              <span
+                className={`rounded-full px-1.5 text-xs ${
+                  filter === s ? 'bg-white/20' : 'bg-muted'
+                }`}
+              >
+                {count}
+              </span>
+            </button>
+          )
+        })}
       </div>
 
       <div className="overflow-hidden rounded-xl border border-border bg-card">
@@ -155,6 +192,31 @@ export function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) {
                         <Detail label="Special requests" value={e.specialRequests} full />
                         <Detail label="Message" value={e.message} full />
                       </dl>
+                      <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
+                        <Button asChild size="sm" variant="outline">
+                          <a href={`mailto:${e.email}`}>Reply by email</a>
+                        </Button>
+                        {e.whatsapp ? (
+                          <Button asChild size="sm" variant="outline">
+                            <a
+                              href={`https://wa.me/${e.whatsapp.replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              WhatsApp
+                            </a>
+                          </Button>
+                        ) : null}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="ml-auto gap-2 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                          onClick={() => onDelete(e)}
+                          disabled={pending && pendingId === e.id}
+                        >
+                          <Trash2 className="size-4" aria-hidden /> Delete
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ) : null}
