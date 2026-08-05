@@ -3,10 +3,11 @@ import { MessageCircle } from 'lucide-react'
 import { Reveal } from '@/components/site/reveal'
 import { CtaLink } from '@/components/site/cta-button'
 import { EditorialLabel } from '@/components/site/editorial'
-import { media } from '@/lib/media'
+import { getResolvedMedia } from '@/lib/data/media-store'
 import { whatsappHref } from '@/lib/site-config'
 
-export function FinalCta() {
+export async function FinalCta() {
+  const media = await getResolvedMedia()
   return (
     <section className="relative isolate overflow-hidden">
       <Image

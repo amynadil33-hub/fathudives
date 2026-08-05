@@ -1,0 +1,111 @@
+[
+  {
+    "id": "g-1",
+    "title": "Sunlit reef",
+    "mediaType": "image",
+    "imageUrl": "/images/reef-dive.png",
+    "category": "Underwater",
+    "caption": "Morning light over a South Ari reef garden.",
+    "featured": true
+  },
+  {
+    "id": "g-2",
+    "title": "Gentle giant",
+    "mediaType": "image",
+    "imageUrl": "/images/whale-shark.png",
+    "category": "Whale Sharks",
+    "caption": "A whale shark cruising the South Ari shallows.",
+    "featured": true
+  },
+  {
+    "id": "g-3",
+    "title": "Whale shark encounter",
+    "mediaType": "video",
+    "imageUrl": "/images/pkg-whaleshark.png",
+    "posterUrl": "/images/pkg-whaleshark.png",
+    "category": "Whale Sharks",
+    "caption": "Video placeholder — client footage to be added.",
+    "featured": false
+  },
+  {
+    "id": "g-4",
+    "title": "Manta in flight",
+    "mediaType": "image",
+    "imageUrl": "/images/manta.png",
+    "category": "Mantas",
+    "caption": "A manta glides over the cleaning station.",
+    "featured": true
+  },
+  {
+    "id": "g-5",
+    "title": "Island lane",
+    "mediaType": "image",
+    "imageUrl": "/images/island-lane.png",
+    "category": "Dhangethi",
+    "caption": "Quiet palm-lined lanes of Dhangethi.",
+    "featured": false
+  },
+  {
+    "id": "g-6",
+    "title": "Beach morning",
+    "mediaType": "image",
+    "imageUrl": "/images/island-beach.png",
+    "category": "Dhangethi",
+    "caption": "White sand and turquoise lagoon.",
+    "featured": true
+  },
+  {
+    "id": "g-7",
+    "title": "Learning to dive",
+    "mediaType": "image",
+    "imageUrl": "/images/learn-to-dive.png",
+    "category": "Guests",
+    "caption": "First breaths underwater with our team.",
+    "featured": false
+  },
+  {
+    "id": "g-8",
+    "title": "On the dhoni",
+    "mediaType": "image",
+    "imageUrl": "/images/island-dhoni.png",
+    "category": "Boat Life",
+    "caption": "Heading out on a traditional dhoni.",
+    "featured": false
+  },
+  {
+    "id": "g-9",
+    "title": "Harbour sunset",
+    "mediaType": "image",
+    "imageUrl": "/images/island-sunset.png",
+    "category": "Island Sunsets",
+    "caption": "Golden hour over the Dhangethi harbour.",
+    "featured": true
+  },
+  {
+    "id": "g-10",
+    "title": "Channel drift",
+    "mediaType": "image",
+    "imageUrl": "/images/site-channel.png",
+    "category": "Underwater",
+    "caption": "Drifting a South Ari channel.",
+    "featured": false
+  },
+  {
+    "id": "g-11",
+    "title": "Coral thila",
+    "mediaType": "image",
+    "imageUrl": "/images/site-thila.png",
+    "category": "Underwater",
+    "caption": "A pinnacle alive with soft corals.",
+    "featured": false
+  },
+  {
+    "id": "g-12",
+    "title": "Island escape",
+    "mediaType": "image",
+    "imageUrl": "/images/pkg-escape.png",
+    "category": "Dhangethi",
+    "caption": "Slow island days between dives.",
+    "featured": false
+  }
+]

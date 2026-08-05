@@ -13,6 +13,11 @@ export async function proxy(request: NextRequest) {
   if (!url || !anonKey) return response
 
   const supabase = createServerClient(url, anonKey, {
+    global: {
+      // Short timeout so an unreachable/stale Supabase project can never freeze
+      // requests. On failure we simply skip the session refresh.
+      fetch: async (input, init) => fetch(input, { ...init, signal: AbortSignal.timeout(2500) }),
+    },
     cookies: {
       getAll() {
         return request.cookies.getAll()
@@ -25,8 +30,12 @@ export async function proxy(request: NextRequest) {
     },
   })
 
-  // Touch the session so cookies are refreshed if needed.
-  await supabase.auth.getUser()
+  try {
+    // Touch the session so cookies are refreshed if needed.
+    await supabase.auth.getUser()
+  } catch {
+    // Supabase unreachable — pass through so the app runs on its fallback data.
+  }
 
   return response
 }

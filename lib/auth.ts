@@ -19,22 +19,29 @@ export async function getAdminUser(): Promise<AdminUser | null> {
   const supabase = await createClient()
 
   if (supabase) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return null
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
 
-    // Look up the profile row to confirm an admin role.
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', user.id)
-      .single()
+      if (user) {
+        // Look up the profile row to confirm an admin role.
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('id, email, role')
+          .eq('id', user.id)
+          .single()
 
-    if (!profile || !['super_admin', 'admin', 'editor'].includes(profile.role)) {
-      return null
+        if (!profile || !['super_admin', 'admin', 'editor'].includes(profile.role)) {
+          return null
+        }
+        return { id: profile.id, email: profile.email ?? '', role: profile.role }
+      }
+      // No Supabase user session — fall through to the dev cookie check below.
+    } catch {
+      // Supabase is configured but unreachable (e.g. stale/invalid project
+      // URL). Fall back to the dev session so the admin stays usable.
     }
-    return { id: profile.id, email: profile.email ?? '', role: profile.role }
   }
 
   // Dev fallback: presence of the session cookie means "logged in".

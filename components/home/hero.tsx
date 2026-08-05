@@ -5,10 +5,12 @@ import { ChevronDown } from 'lucide-react'
 import { HeroVideo } from '@/components/site/hero-video'
 import { CtaLink } from '@/components/site/cta-button'
 import { EditorialLabel } from '@/components/site/editorial'
-import { media } from '@/lib/media'
+import { media as defaultMedia } from '@/lib/media'
 import { siteConfig } from '@/lib/site-config'
 
-export function Hero() {
+type HeroMedia = { poster: string; posterMobile: string; videoSrc: string }
+
+export function Hero({ hero = defaultMedia.hero }: { hero?: HeroMedia }) {
   const reduce = useReducedMotion()
 
   const rise = (delay: number) => ({
@@ -19,7 +21,7 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden">
-      <HeroVideo poster={media.hero.poster} posterMobile={media.hero.posterMobile} src={media.hero.videoSrc} />
+      <HeroVideo poster={hero.poster} posterMobile={hero.posterMobile} src={hero.videoSrc} />
 
       {/* Overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-deep/55 via-deep/40 to-deep/75" />

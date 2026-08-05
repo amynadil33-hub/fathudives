@@ -193,19 +193,21 @@ export function EnquiriesTable({ enquiries }: { enquiries: Enquiry[] }) {
                         <Detail label="Message" value={e.message} full />
                       </dl>
                       <div className="mt-4 flex items-center gap-3 border-t border-border pt-4">
-                        <Button asChild size="sm" variant="outline">
-                          <a href={`mailto:${e.email}`}>Reply by email</a>
-                        </Button>
+                        <a
+                          href={`mailto:${e.email}`}
+                          className="inline-flex items-center rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                        >
+                          Reply by email
+                        </a>
                         {e.whatsapp ? (
-                          <Button asChild size="sm" variant="outline">
-                            <a
-                              href={`https://wa.me/${e.whatsapp.replace(/[^0-9]/g, '')}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              WhatsApp
-                            </a>
-                          </Button>
+                          <a
+                            href={`https://wa.me/${e.whatsapp.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
+                          >
+                            WhatsApp
+                          </a>
                         ) : null}
                         <Button
                           size="sm"

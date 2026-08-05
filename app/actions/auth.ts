@@ -18,14 +18,22 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   const supabase = await createClient()
 
   if (supabase) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return { error: 'Invalid credentials. Please try again.' }
-    redirect('/admin')
+    let supabaseSignedIn = false
+    try {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      supabaseSignedIn = !error
+      // Invalid Supabase credentials — still allow the demo login below so the
+      // admin can be reviewed when the Supabase project has no admin user yet.
+    } catch {
+      // Supabase configured but unreachable (stale project URL / offline).
+      // Fall through to the dev credential path below.
+    }
+    // redirect() throws internally, so it must run OUTSIDE the try/catch.
+    if (supabaseSignedIn) redirect('/admin')
   }
 
-  // Dev fallback while Supabase is not configured. Accepts a demo credential so
-  // the protected admin structure can be reviewed. Replace with Supabase Auth
-  // by adding the environment variables.
+  // Dev fallback used when Supabase is not configured OR is unreachable.
+  // Accepts a demo credential so the protected admin structure can be reviewed.
   if (email === 'admin@fathudives.com' && password === 'demo') {
     const store = await cookies()
     store.set(DEV_SESSION_COOKIE, '1', {

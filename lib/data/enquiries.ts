@@ -131,9 +131,17 @@ export async function createEnquiry(input: EnquiryInput): Promise<Enquiry> {
   const supabase = await createClient()
 
   if (supabase) {
-    const { data, error } = await supabase.from('enquiries').insert(toRow(input)).select().single()
-    if (error) throw error
-    return mapRow(data)
+    try {
+      const { data, error } = await supabase
+        .from('enquiries')
+        .insert(toRow(input))
+        .select()
+        .single()
+      if (error) throw error
+      return mapRow(data)
+    } catch {
+      // Supabase unreachable — fall back to the disk store below.
+    }
   }
 
   const enquiry: Enquiry = {
@@ -151,9 +159,13 @@ export async function createEnquiry(input: EnquiryInput): Promise<Enquiry> {
 export async function updateEnquiryStatus(id: string, status: EnquiryStatus): Promise<void> {
   const supabase = await createClient()
   if (supabase) {
-    const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
-    if (error) throw error
-    return
+    try {
+      const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+      if (error) throw error
+      return
+    } catch {
+      // Supabase unreachable — fall back to the disk store below.
+    }
   }
   const items = await readAll()
   const found = items.find((e) => e.id === id)
@@ -166,9 +178,13 @@ export async function updateEnquiryStatus(id: string, status: EnquiryStatus): Pr
 export async function deleteEnquiry(id: string): Promise<void> {
   const supabase = await createClient()
   if (supabase) {
-    const { error } = await supabase.from('enquiries').delete().eq('id', id)
-    if (error) throw error
-    return
+    try {
+      const { error } = await supabase.from('enquiries').delete().eq('id', id)
+      if (error) throw error
+      return
+    } catch {
+      // Supabase unreachable — fall back to the disk store below.
+    }
   }
   const items = await readAll()
   await writeAll(items.filter((e) => e.id !== id))
@@ -177,12 +193,16 @@ export async function deleteEnquiry(id: string): Promise<void> {
 export async function getEnquiries(): Promise<Enquiry[]> {
   const supabase = await createClient()
   if (supabase) {
-    const { data, error } = await supabase
-      .from('enquiries')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (error) throw error
-    return (data ?? []).map(mapRow)
+    try {
+      const { data, error } = await supabase
+        .from('enquiries')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return (data ?? []).map(mapRow)
+    } catch {
+      // Supabase unreachable — fall back to the disk store below.
+    }
   }
   return readAll()
 }

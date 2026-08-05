@@ -17,22 +17,24 @@ import {
   getTestimonials,
   getFaqs,
 } from '@/lib/data'
+import { getResolvedMedia } from '@/lib/data/media-store'
 import { LocalBusinessJsonLd, FaqJsonLd } from '@/components/site/json-ld'
 
 export default async function HomePage() {
-  const [packages, sites, gallery, testimonials, faqs] = await Promise.all([
+  const [packages, sites, gallery, testimonials, faqs, media] = await Promise.all([
     getFeaturedPackages(),
     getFeaturedDiveSites(),
     getGalleryItems(),
     getTestimonials(),
     getFaqs(),
+    getResolvedMedia(),
   ])
 
   return (
     <>
       <LocalBusinessJsonLd />
       <FaqJsonLd faqs={faqs} />
-      <Hero />
+      <Hero hero={media.hero} />
       <Intro />
       <SignatureExperiences />
       <FeaturedPackages packages={packages} />

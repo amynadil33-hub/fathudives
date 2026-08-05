@@ -2,16 +2,16 @@ import Image from 'next/image'
 import { Section, Container, EditorialLabel } from '@/components/site/editorial'
 import { Reveal } from '@/components/site/reveal'
 import { CtaLink } from '@/components/site/cta-button'
-import { media } from '@/lib/media'
+import { getResolvedMedia } from '@/lib/data/media-store'
 
-const moments = [
-  { label: 'White sandy beaches', image: media.island.beach },
-  { label: 'Palm-lined island lanes', image: media.island.lane },
-  { label: 'Sunset by the harbour', image: media.island.sunset },
-  { label: 'Traditional boats', image: media.island.boats },
-]
-
-export function IslandExperience() {
+export async function IslandExperience() {
+  const media = await getResolvedMedia()
+  const moments = [
+    { label: 'White sandy beaches', image: media.island.beach },
+    { label: 'Palm-lined island lanes', image: media.island.lane },
+    { label: 'Sunset by the harbour', image: media.island.sunset },
+    { label: 'Traditional boats', image: media.island.boats },
+  ]
   return (
     <Section tone="sand" className="relative overflow-hidden">
       <Container>

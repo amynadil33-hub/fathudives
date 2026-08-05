@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { Section, Container, EditorialLabel } from '@/components/site/editorial'
 import { Reveal } from '@/components/site/reveal'
-import { media } from '@/lib/media'
+import { getResolvedMedia } from '@/lib/data/media-store'
 
 type Experience = {
   title: string
@@ -13,42 +13,42 @@ type Experience = {
   image: string
 }
 
-const experiences: Experience[] = [
-  {
-    title: 'Whale Shark Encounters',
-    level: 'All levels · snorkel or dive',
-    description:
-      'South Ari Atoll is one of the few places on earth where gentle whale sharks gather year-round. Slip into the blue beside the largest fish in the ocean.',
-    href: '/dive-sites',
-    image: media.experiences.whaleShark,
-  },
-  {
-    title: 'Manta Ray Adventures',
-    level: 'Beginner friendly',
-    description:
-      'Hover quietly at a cleaning station as mantas glide overhead in slow, hypnotic loops — one of diving’s most graceful encounters.',
-    href: '/dive-sites',
-    image: media.experiences.manta,
-  },
-  {
-    title: 'South Ari Reef Diving',
-    level: 'Certified divers',
-    description:
-      'Thilas, channels and coral gardens alive with colour. Drift with the current and let the reef reveal itself.',
-    href: '/dive-sites',
-    image: media.experiences.reef,
-  },
-  {
-    title: 'Learn to Dive',
-    level: 'First-timers welcome',
-    description:
-      'Take your first breaths underwater in a warm, calm lagoon with a patient local instructor by your side.',
-    href: '/dive-courses',
-    image: media.experiences.learn,
-  },
-]
-
-export function SignatureExperiences() {
+export async function SignatureExperiences() {
+  const media = await getResolvedMedia()
+  const experiences: Experience[] = [
+    {
+      title: 'Whale Shark Encounters',
+      level: 'All levels · snorkel or dive',
+      description:
+        'South Ari Atoll is one of the few places on earth where gentle whale sharks gather year-round. Slip into the blue beside the largest fish in the ocean.',
+      href: '/dive-sites',
+      image: media.experiences.whaleShark,
+    },
+    {
+      title: 'Manta Ray Adventures',
+      level: 'Beginner friendly',
+      description:
+        'Hover quietly at a cleaning station as mantas glide overhead in slow, hypnotic loops — one of diving’s most graceful encounters.',
+      href: '/dive-sites',
+      image: media.experiences.manta,
+    },
+    {
+      title: 'South Ari Reef Diving',
+      level: 'Certified divers',
+      description:
+        'Thilas, channels and coral gardens alive with colour. Drift with the current and let the reef reveal itself.',
+      href: '/dive-sites',
+      image: media.experiences.reef,
+    },
+    {
+      title: 'Learn to Dive',
+      level: 'First-timers welcome',
+      description:
+        'Take your first breaths underwater in a warm, calm lagoon with a patient local instructor by your side.',
+      href: '/dive-courses',
+      image: media.experiences.learn,
+    },
+  ]
   return (
     <Section tone="seafoam" className="relative">
       <Container>

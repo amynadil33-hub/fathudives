@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { Users, ShieldCheck, Wrench, ClipboardCheck, Anchor, HeartHandshake } from 'lucide-react'
 import { Section, Container, EditorialLabel } from '@/components/site/editorial'
 import { Reveal } from '@/components/site/reveal'
-import { media } from '@/lib/media'
+import { getResolvedMedia } from '@/lib/data/media-store'
 
 const pillars = [
   {
@@ -37,7 +37,8 @@ const pillars = [
   },
 ]
 
-export function TrustSafety() {
+export async function TrustSafety() {
+  const media = await getResolvedMedia()
   return (
     <Section tone="seafoam" className="relative overflow-hidden">
       <Container>
