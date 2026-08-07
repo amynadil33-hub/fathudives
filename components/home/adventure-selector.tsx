@@ -6,10 +6,10 @@ import { Compass, ArrowRight } from 'lucide-react'
 import { Section, Container, EditorialLabel } from '@/components/site/editorial'
 import { Reveal } from '@/components/site/reveal'
 import { CtaLink } from '@/components/site/cta-button'
-import { adventureOptions } from '@/lib/data/experiences'
+import type { AdventureOption } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-export function AdventureSelector() {
+export function AdventureSelector({ adventureOptions }: { adventureOptions: AdventureOption[] }) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selected = adventureOptions.find((o) => o.id === selectedId) ?? null
 
