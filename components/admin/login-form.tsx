@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+const demoEmail = 'admin@fathudives.com'
+
 export function LoginForm() {
   const [state, formAction, pending] = useActionState<LoginState, FormData>(login, null)
 
@@ -21,6 +23,7 @@ export function LoginForm() {
           autoComplete="email"
           required
           placeholder="admin@fathudives.com"
+          defaultValue={demoEmail}
         />
       </div>
       <div className="space-y-2">
@@ -32,6 +35,7 @@ export function LoginForm() {
           autoComplete="current-password"
           required
           placeholder="••••••••"
+          defaultValue="demo"
         />
       </div>
 

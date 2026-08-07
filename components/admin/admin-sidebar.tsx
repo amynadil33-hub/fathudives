@@ -10,6 +10,9 @@ import {
   Anchor,
   Images,
   Quote,
+  CircleHelp,
+  Sparkles,
+  Compass,
   Settings,
   LogOut,
 } from 'lucide-react'
@@ -24,6 +27,9 @@ const nav = [
   { label: 'Dive Sites', href: '/admin/dive-sites', icon: Anchor },
   { label: 'Gallery', href: '/admin/gallery', icon: Images },
   { label: 'Testimonials', href: '/admin/testimonials', icon: Quote },
+  { label: 'FAQs', href: '/admin/faqs', icon: CircleHelp },
+  { label: 'Experiences', href: '/admin/experiences', icon: Sparkles },
+  { label: 'Adventure Options', href: '/admin/adventure-options', icon: Compass },
   { label: 'Site Settings', href: '/admin/settings', icon: Settings },
 ]
 

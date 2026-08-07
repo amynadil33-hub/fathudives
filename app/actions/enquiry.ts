@@ -2,7 +2,6 @@
 
 import { z } from 'zod'
 import { createEnquiry } from '@/lib/data/enquiries'
-import { packages } from '@/lib/data/packages'
 
 const enquirySchema = z.object({
   fullName: z.string().min(2, 'Please enter your full name.'),
@@ -59,11 +58,8 @@ export async function submitEnquiry(
   }
 
   const d = parsed.data
-  const selectedPackage = packages.find((pkg) => pkg.id === d.packageId)
   const isDatabaseId = Boolean(d.packageId && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(d.packageId))
-  const message = selectedPackage
-    ? [`Selected package: ${selectedPackage.title}.`, d.message].filter(Boolean).join(' ')
-    : d.message
+  const message = d.message
 
   try {
     await createEnquiry({

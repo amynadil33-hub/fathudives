@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Inbox, Package, GraduationCap, Images, CheckCircle2, ArrowRight } from 'lucide-react'
 import { requireAdmin } from '@/lib/auth'
 import { getEnquiries } from '@/lib/data/enquiries'
-import { getPackages, getCourses, getGalleryItems } from '@/lib/data'
+import { getAdminPackages, getAdminCourses, getAdminGalleryItems } from '@/lib/data'
 import { AdminHeader, StatCard } from '@/components/admin/admin-ui'
 import { EnquiryStatusBadge } from '@/components/admin/enquiry-status-badge'
 import { formatDate } from '@/lib/utils'
@@ -12,9 +12,9 @@ export default async function AdminDashboard() {
 
   const [enquiries, packages, courses, gallery] = await Promise.all([
     getEnquiries(),
-    getPackages(),
-    getCourses(),
-    getGalleryItems(),
+    getAdminPackages(),
+    getAdminCourses(),
+    getAdminGalleryItems(),
   ])
 
   const newEnquiries = enquiries.filter((e) => e.status === 'new')
@@ -28,8 +28,8 @@ export default async function AdminDashboard() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="New enquiries" value={newEnquiries.length} icon={Inbox} hint="Awaiting first reply" />
         <StatCard label="Confirmed bookings" value={confirmed.length} icon={CheckCircle2} hint="Marked confirmed" />
-        <StatCard label="Active packages" value={packages.length} icon={Package} />
-        <StatCard label="Published courses" value={courses.length} icon={GraduationCap} />
+        <StatCard label="Active packages" value={packages.filter((item) => item.active).length} icon={Package} />
+        <StatCard label="Published courses" value={courses.filter((item) => item.active).length} icon={GraduationCap} />
       </div>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

@@ -1,59 +1,6 @@
 import { requireAdmin } from '@/lib/auth'
-import { getPackages } from '@/lib/data'
-import { AdminHeader, ContentNotice } from '@/components/admin/admin-ui'
-import { formatPrice } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-
-export default async function AdminPackagesPage() {
-  await requireAdmin()
-  const packages = await getPackages()
-
-  return (
-    <div>
-      <AdminHeader
-        title="Packages"
-        description="Dive and stay packages shown on the website."
-        action={
-          <Button disabled className="gap-2">
-            <Plus className="size-4" aria-hidden /> New package
-          </Button>
-        }
-      />
-      <div className="mb-4">
-        <ContentNotice />
-      </div>
-
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <table className="w-full text-sm">
-          <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-            <tr>
-              <th className="p-4 font-medium">Title</th>
-              <th className="hidden p-4 font-medium sm:table-cell">Nights</th>
-              <th className="hidden p-4 font-medium sm:table-cell">Dives</th>
-              <th className="hidden p-4 font-medium md:table-cell">Level</th>
-              <th className="p-4 font-medium">From</th>
-              <th className="p-4 font-medium">Featured</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {packages.map((p) => (
-              <tr key={p.id}>
-                <td className="p-4 font-medium text-foreground">{p.title}</td>
-                <td className="hidden p-4 text-muted-foreground sm:table-cell">{p.nights}</td>
-                <td className="hidden p-4 text-muted-foreground sm:table-cell">{p.dives}</td>
-                <td className="hidden p-4 text-muted-foreground md:table-cell">
-                  {p.experienceLevel}
-                </td>
-                <td className="p-4 text-muted-foreground">
-                  {formatPrice(p.basePrice, p.currency)}
-                </td>
-                <td className="p-4 text-muted-foreground">{p.featured ? 'Yes' : 'No'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
+import { getAdminPackages } from '@/lib/data'
+import { AdminHeader } from '@/components/admin/admin-ui'
+import { CmsManager, type CmsField } from '@/components/admin/cms-manager'
+const fields:CmsField[]=[{name:'title',label:'Title',required:true},{name:'slug',label:'Slug',required:true},{name:'short_description',label:'Short description',kind:'textarea'},{name:'full_description',label:'Full description',kind:'textarea'},{name:'media_file',label:'Featured image upload',kind:'file'},{name:'featured_image',label:'Featured image URL'},{name:'gallery',label:'Gallery URLs (one per line)',kind:'textarea'},{name:'nights',label:'Nights',kind:'number'},{name:'dives',label:'Dives',kind:'number'},{name:'experience_level',label:'Experience level'},{name:'audiences',label:'Audiences',kind:'textarea'},{name:'base_price',label:'Base price',kind:'number'},{name:'currency',label:'Currency'},{name:'highlights',label:'Highlights',kind:'textarea'},{name:'accommodation_info',label:'Accommodation info',kind:'textarea'},{name:'equipment_info',label:'Equipment info',kind:'textarea'},{name:'transfer_info',label:'Transfer info',kind:'textarea'},{name:'important_notes',label:'Important notes',kind:'textarea'},{name:'cancellation_policy',label:'Cancellation policy',kind:'textarea'},{name:'accommodation_included',label:'Accommodation included',kind:'checkbox'},{name:'meals_included',label:'Meals included',kind:'checkbox'},{name:'transfers_included',label:'Transfers included',kind:'checkbox'},{name:'whale_shark',label:'Whale shark',kind:'checkbox'},{name:'manta',label:'Manta',kind:'checkbox'},{name:'featured',label:'Featured',kind:'checkbox'},{name:'active',label:'Active',kind:'checkbox'},{name:'sort_order',label:'Sort order',kind:'number'}]
+export default async function Page(){await requireAdmin();const items=await getAdminPackages();return <div><AdminHeader title="Packages" description="Create, publish and maintain dive-and-stay packages."/><CmsManager entity="packages" items={items as unknown as (Record<string,unknown>&{id:string})[]} fields={fields} titleKey="title"/></div>}
