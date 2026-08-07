@@ -2,9 +2,10 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-// Server-side Supabase client (Server Components, Route Handlers, Server
-// Actions). Reads the user session from cookies. Returns null when env vars
-// are not configured so callers can fall back to mock data.
+// Server-side Supabase client for authenticated Server Components, Route
+// Handlers, and Server Actions. It reads the user session from cookies. A
+// missing configuration is returned explicitly; production data callers throw
+// rather than silently falling back to the reference data in lib/data/*.ts.
 export async function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
