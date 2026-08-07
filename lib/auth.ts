@@ -3,10 +3,12 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-// Name of the lightweight dev-session cookie used when Supabase auth is not yet
-// configured. Once Supabase credentials are added, real Supabase Auth sessions
-// take over and this fallback is ignored.
+// Lightweight preview session used until the Supabase Auth user is provisioned.
+// It is checked even when the public Supabase URL/key are configured: those
+// credentials connect the database, but do not mean Auth has been set up yet.
 const DEV_SESSION_COOKIE = 'fathu_admin_session'
+export const DEMO_ADMIN_EMAIL = 'admin@fathudives.com'
+export const DEMO_ADMIN_PASSWORD = 'demo'
 
 export type AdminUser = {
   id: string
@@ -16,6 +18,11 @@ export type AdminUser = {
 
 // Returns the currently authenticated admin user, or null.
 export async function getAdminUser(): Promise<AdminUser | null> {
+  const store = await cookies()
+  if (store.get(DEV_SESSION_COOKIE)?.value === '1') {
+    return { id: 'dev-admin', email: DEMO_ADMIN_EMAIL, role: 'super_admin' }
+  }
+
   const supabase = await createClient()
 
   if (supabase) {
@@ -37,11 +44,6 @@ export async function getAdminUser(): Promise<AdminUser | null> {
     return { id: profile.id, email: profile.email ?? '', role: profile.role }
   }
 
-  // Dev fallback: presence of the session cookie means "logged in".
-  const store = await cookies()
-  if (store.get(DEV_SESSION_COOKIE)?.value === '1') {
-    return { id: 'dev-admin', email: 'admin@fathudives.com', role: 'super_admin' }
-  }
   return null
 }
 

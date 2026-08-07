@@ -2,8 +2,8 @@ import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 // Refreshes the Supabase auth session on each request so Server Components
-// always see a valid session. When Supabase env vars are absent, the app runs
-// on mock data and this middleware becomes a transparent pass-through.
+// always see a valid session. The separate HTTP-only preview cookie is left
+// untouched while Supabase Auth is being provisioned.
 export async function proxy(request: NextRequest) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
