@@ -3,52 +3,10 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { Section, Container, EditorialLabel } from '@/components/site/editorial'
 import { Reveal } from '@/components/site/reveal'
-import { media } from '@/lib/media'
+import type { Experience } from '@/lib/types'
 
-type Experience = {
-  title: string
-  level: string
-  description: string
-  href: string
-  image: string
-}
-
-const experiences: Experience[] = [
-  {
-    title: 'Whale Shark Encounters',
-    level: 'All levels · snorkel or dive',
-    description:
-      'South Ari Atoll is one of the few places on earth where gentle whale sharks gather year-round. Slip into the blue beside the largest fish in the ocean.',
-    href: '/dive-sites',
-    image: media.experiences.whaleShark,
-  },
-  {
-    title: 'Manta Ray Adventures',
-    level: 'Beginner friendly',
-    description:
-      'Hover quietly at a cleaning station as mantas glide overhead in slow, hypnotic loops — one of diving’s most graceful encounters.',
-    href: '/dive-sites',
-    image: media.experiences.manta,
-  },
-  {
-    title: 'South Ari Reef Diving',
-    level: 'Certified divers',
-    description:
-      'Thilas, channels and coral gardens alive with colour. Drift with the current and let the reef reveal itself.',
-    href: '/dive-sites',
-    image: media.experiences.reef,
-  },
-  {
-    title: 'Learn to Dive',
-    level: 'First-timers welcome',
-    description:
-      'Take your first breaths underwater in a warm, calm lagoon with a patient local instructor by your side.',
-    href: '/dive-courses',
-    image: media.experiences.learn,
-  },
-]
-
-export function SignatureExperiences() {
+export function SignatureExperiences({ experiences }: { experiences: Experience[] }) {
+  if (!experiences.length) return null
   return (
     <Section tone="seafoam" className="relative">
       <Container>
@@ -67,22 +25,22 @@ export function SignatureExperiences() {
         <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8">
           {/* Large feature (whale shark) */}
           <Reveal className="md:col-span-7" direction="up">
-            <ExperienceTile experience={experiences[0]} tall />
+            {experiences[0] ? <ExperienceTile experience={experiences[0]} tall /> : null}
           </Reveal>
 
           {/* Two stacked on the right */}
           <div className="grid gap-6 md:col-span-5 md:gap-8">
             <Reveal delay={0.1}>
-              <ExperienceTile experience={experiences[1]} />
+              {experiences[1] ? <ExperienceTile experience={experiences[1]} /> : null}
             </Reveal>
             <Reveal delay={0.2}>
-              <ExperienceTile experience={experiences[3]} />
+              {experiences[3] ? <ExperienceTile experience={experiences[3]} /> : null}
             </Reveal>
           </div>
 
           {/* Wide reef band */}
           <Reveal className="md:col-span-12" delay={0.1}>
-            <ExperienceTile experience={experiences[2]} wide />
+            {experiences[2] ? <ExperienceTile experience={experiences[2]} wide /> : null}
           </Reveal>
         </div>
       </Container>

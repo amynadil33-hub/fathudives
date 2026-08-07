@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
-import type { Database } from './types'
 
 // Server-side Supabase client (Server Components, Route Handlers, Server
 // Actions). Reads the user session from cookies. Returns null when env vars
@@ -13,7 +13,7 @@ export async function createClient() {
 
   const cookieStore = await cookies()
 
-  return createServerClient<Database>(url, anonKey, {
+  return createServerClient(url, anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll()
@@ -32,6 +32,25 @@ export async function createClient() {
   })
 }
 
+// Request-independent client for public content reads. Unlike createClient(),
+// this does not access cookies(), so it is safe in generateStaticParams,
+// generateMetadata, sitemap generation, and other build-time contexts. Public
+// visibility continues to be enforced by RLS and explicit active filters.
+export function createPublicClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+  if (!url || !anonKey) return null
+
+  return createSupabaseClient(url, anonKey, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+    },
+  })
+}
+
 // Admin client using the service-role key. NEVER import this into client code.
 // Only use inside server actions / route handlers for privileged operations.
 export function createAdminClient() {
@@ -40,7 +59,7 @@ export function createAdminClient() {
 
   if (!url || !serviceKey) return null
 
-  return createServerClient<Database>(url, serviceKey, {
+  return createServerClient(url, serviceKey, {
     cookies: { getAll: () => [], setAll: () => {} },
   })
 }

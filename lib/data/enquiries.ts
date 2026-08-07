@@ -2,11 +2,6 @@ import 'server-only'
 import type { Enquiry, EnquiryInput, EnquiryStatus } from '@/lib/types'
 import { createClient } from '@/lib/supabase/server'
 
-// Development fallback store. When Supabase is configured, all reads/writes go
-// through it instead. This keeps the app fully functional before credentials
-// are added, without hard-coding sample enquiries into components.
-const memoryStore: Enquiry[] = []
-
 function toRow(input: EnquiryInput) {
   return {
     full_name: input.fullName,
@@ -35,44 +30,28 @@ function toRow(input: EnquiryInput) {
 export async function createEnquiry(input: EnquiryInput): Promise<Enquiry> {
   const supabase = await createClient()
 
-  if (supabase) {
-    const { data, error } = await supabase.from('enquiries').insert(toRow(input)).select().single()
-    if (error) throw error
-    return mapRow(data)
-  }
-
-  const enquiry: Enquiry = {
-    ...input,
-    id: `enq_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-    status: 'new',
-    createdAt: new Date().toISOString(),
-  }
-  memoryStore.unshift(enquiry)
-  return enquiry
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data, error } = await supabase.from('enquiries').insert(toRow(input)).select().single()
+  if (error) throw error
+  return mapRow(data)
 }
 
 export async function updateEnquiryStatus(id: string, status: EnquiryStatus): Promise<void> {
   const supabase = await createClient()
-  if (supabase) {
-    const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
-    if (error) throw error
-    return
-  }
-  const found = memoryStore.find((e) => e.id === id)
-  if (found) found.status = status
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+  if (error) throw error
 }
 
 export async function getEnquiries(): Promise<Enquiry[]> {
   const supabase = await createClient()
-  if (supabase) {
-    const { data, error } = await supabase
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data, error } = await supabase
       .from('enquiries')
       .select('*')
       .order('created_at', { ascending: false })
-    if (error) throw error
-    return (data ?? []).map(mapRow)
-  }
-  return memoryStore
+  if (error) throw error
+  return (data ?? []).map(mapRow)
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
