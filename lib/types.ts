@@ -58,6 +58,8 @@ export interface Package {
   transferInfo: string
   importantNotes: string[]
   cancellationPolicy: string
+  active?: boolean
+  sortOrder?: number
 }
 
 export type CourseCategory =
@@ -85,6 +87,8 @@ export interface Course {
   highlights: string[]
   whatYouLearn: string[]
   featured: boolean
+  active?: boolean
+  sortOrder?: number
 }
 
 export type SiteType = 'Reef' | 'Channel' | 'Thila' | 'Wreck' | 'Whale Shark Area' | 'Manta Area'
@@ -108,6 +112,8 @@ export interface DiveSite {
   latitude: number | null
   longitude: number | null
   featured: boolean
+  active?: boolean
+  sortOrder?: number
 }
 
 export type GalleryCategory =
@@ -131,6 +137,8 @@ export interface GalleryItem {
   category: GalleryCategory
   caption: string
   featured: boolean
+  active?: boolean
+  sortOrder?: number
 }
 
 export interface Testimonial {
@@ -142,12 +150,17 @@ export interface Testimonial {
   guestImage: string
   source: string
   sourceUrl?: string
+  featured?: boolean
+  active?: boolean
+  sortOrder?: number
 }
 
 export interface Faq {
   id: string
   question: string
   answer: string
+  active?: boolean
+  sortOrder?: number
 }
 
 export interface Experience {
@@ -158,6 +171,9 @@ export interface Experience {
   image: string
   href: string
   size: 'tall' | 'wide' | 'regular'
+  featured?: boolean
+  active?: boolean
+  sortOrder?: number
 }
 
 export interface AdventureOption {
@@ -167,7 +183,12 @@ export interface AdventureOption {
   recommendationType: 'package' | 'course'
   recommendationSlug: string
   recommendationLabel: string
+  featured?: boolean
+  active?: boolean
+  sortOrder?: number
 }
+
+export interface SiteSettings { id: 1; contactEmail: string; whatsapp: string; phone: string; instagramUrl: string; facebookUrl: string; youtubeUrl: string; tripadvisorUrl: string; heroHeadline: string; heroSubheadline: string; announcement: string; seoTitle: string; seoDescription: string }
 
 // Enquiry (contact / booking form) ------------------------------------------
 

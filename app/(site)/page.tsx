@@ -16,27 +16,33 @@ import {
   getGalleryItems,
   getTestimonials,
   getFaqs,
+  getExperiences,
+  getAdventureOptions,
+  getSiteSettings,
 } from '@/lib/data'
 import { LocalBusinessJsonLd, FaqJsonLd } from '@/components/site/json-ld'
 
 export default async function HomePage() {
-  const [packages, sites, gallery, testimonials, faqs] = await Promise.all([
+  const [packages, sites, gallery, testimonials, faqs, experiences, adventureOptions, settings] = await Promise.all([
     getFeaturedPackages(),
     getFeaturedDiveSites(),
     getGalleryItems(),
     getTestimonials(),
     getFaqs(),
+    getExperiences(),
+    getAdventureOptions(),
+    getSiteSettings(),
   ])
 
   return (
     <>
       <LocalBusinessJsonLd />
       <FaqJsonLd faqs={faqs} />
-      <Hero />
+      <Hero headline={settings.heroHeadline} subheadline={settings.heroSubheadline} />
       <Intro />
-      <SignatureExperiences />
+      <SignatureExperiences experiences={experiences} />
       <FeaturedPackages packages={packages} />
-      <AdventureSelector />
+      <AdventureSelector adventureOptions={adventureOptions} />
       <IslandExperience />
       <DiveSitesPreview sites={sites} />
       <TrustSafety />
