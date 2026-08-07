@@ -1,51 +1,6 @@
 import { requireAdmin } from '@/lib/auth'
-import { getCourses } from '@/lib/data'
-import { AdminHeader, ContentNotice } from '@/components/admin/admin-ui'
-import { formatPrice } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-
-export default async function AdminCoursesPage() {
-  await requireAdmin()
-  const courses = await getCourses()
-
-  return (
-    <div>
-      <AdminHeader
-        title="Courses"
-        description="Diving courses offered by the centre."
-        action={
-          <Button disabled className="gap-2">
-            <Plus className="size-4" aria-hidden /> New course
-          </Button>
-        }
-      />
-      <div className="mb-4">
-        <ContentNotice />
-      </div>
-
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
-        <table className="w-full text-sm">
-          <thead className="border-b border-border bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-            <tr>
-              <th className="p-4 font-medium">Title</th>
-              <th className="hidden p-4 font-medium sm:table-cell">Category</th>
-              <th className="hidden p-4 font-medium md:table-cell">Duration</th>
-              <th className="p-4 font-medium">From</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-border">
-            {courses.map((c) => (
-              <tr key={c.id}>
-                <td className="p-4 font-medium text-foreground">{c.title}</td>
-                <td className="hidden p-4 text-muted-foreground sm:table-cell">{c.category}</td>
-                <td className="hidden p-4 text-muted-foreground md:table-cell">{c.duration}</td>
-                <td className="p-4 text-muted-foreground">{formatPrice(c.price, c.currency)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  )
-}
+import { getAdminCourses } from '@/lib/data'
+import { AdminHeader } from '@/components/admin/admin-ui'
+import { CmsManager, type CmsField } from '@/components/admin/cms-manager'
+const fields:CmsField[]=[{name:'title',label:'Title',required:true},{name:'slug',label:'Slug',required:true},{name:'category',label:'Category',required:true},{name:'description',label:'Description',kind:'textarea'},{name:'long_description',label:'Long description',kind:'textarea'},{name:'duration',label:'Duration'},{name:'minimum_age',label:'Minimum age'},{name:'required_certification',label:'Required certification'},{name:'number_of_dives',label:'Number of dives',kind:'number'},{name:'price',label:'Price',kind:'number'},{name:'currency',label:'Currency'},{name:'media_file',label:'Featured image upload',kind:'file'},{name:'featured_image',label:'Featured image URL'},{name:'highlights',label:'Highlights',kind:'textarea'},{name:'what_you_learn',label:'What you learn',kind:'textarea'},{name:'featured',label:'Featured',kind:'checkbox'},{name:'active',label:'Active',kind:'checkbox'},{name:'sort_order',label:'Sort order',kind:'number'}]
+export default async function Page(){await requireAdmin();const items=await getAdminCourses();return <div><AdminHeader title="Courses" description="Create and maintain diving courses."/><CmsManager entity="courses" items={items as unknown as (Record<string,unknown>&{id:string})[]} fields={fields} titleKey="title"/></div>}

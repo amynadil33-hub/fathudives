@@ -66,13 +66,3 @@ export function EmptyState({
     </div>
   )
 }
-
-export function ContentNotice() {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4 text-sm text-muted-foreground">
-      This management screen is wired to typed sample data. Once Supabase credentials are added,
-      create, edit and delete actions will persist to the database. The read-only tables below
-      reflect the content currently shown on the public website.
-    </div>
-  )
-}

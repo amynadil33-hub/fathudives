@@ -2,12 +2,11 @@
 
 import { revalidatePath } from 'next/cache'
 import { updateEnquiryStatus } from '@/lib/data/enquiries'
-import { getAdminUser } from '@/lib/auth'
+import { requireAdmin } from '@/lib/auth'
 import type { EnquiryStatus } from '@/lib/types'
 
 export async function setEnquiryStatus(id: string, status: EnquiryStatus) {
-  const user = await getAdminUser()
-  if (!user) return { error: 'Not authorised.' }
+  await requireAdmin()
 
   try {
     await updateEnquiryStatus(id, status)

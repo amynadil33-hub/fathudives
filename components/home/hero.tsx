@@ -8,7 +8,7 @@ import { EditorialLabel } from '@/components/site/editorial'
 import { media } from '@/lib/media'
 import { siteConfig } from '@/lib/site-config'
 
-export function Hero() {
+export function Hero({ headline, subheadline }: { headline?: string; subheadline?: string }) {
   const reduce = useReducedMotion()
 
   const rise = (delay: number) => ({
@@ -42,16 +42,14 @@ export function Hero() {
           {...rise(0.25)}
           className="mt-6 font-serif text-[2.75rem] leading-[1.02] text-background sm:text-6xl md:text-7xl"
         >
-          Dive the <span className="italic text-accent">Wild Heart</span>
-          <br />
-          of Dhangethi
+          {headline || 'Dive the Wild Heart of Dhangethi'}
         </motion.h1>
 
         <motion.p
           {...rise(0.45)}
           className="mx-auto mt-6 max-w-xl text-pretty text-lg leading-relaxed text-background/90 md:text-xl"
         >
-          Whale shark encounters, unforgettable reefs and the warmth of a true Maldivian island escape.
+          {subheadline || 'Whale shark encounters, unforgettable reefs and the warmth of a true Maldivian island escape.'}
         </motion.p>
 
         <motion.div

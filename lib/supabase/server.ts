@@ -1,6 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database } from './types'
 
 // Server-side Supabase client (Server Components, Route Handlers, Server
 // Actions). Reads the user session from cookies. Returns null when env vars
@@ -13,7 +12,7 @@ export async function createClient() {
 
   const cookieStore = await cookies()
 
-  return createServerClient<Database>(url, anonKey, {
+  return createServerClient(url, anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll()
@@ -40,7 +39,7 @@ export function createAdminClient() {
 
   if (!url || !serviceKey) return null
 
-  return createServerClient<Database>(url, serviceKey, {
+  return createServerClient(url, serviceKey, {
     cookies: { getAll: () => [], setAll: () => {} },
   })
 }

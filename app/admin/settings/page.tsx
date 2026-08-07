@@ -1,56 +1,11 @@
 import { requireAdmin } from '@/lib/auth'
-import { siteConfig } from '@/lib/site-config'
-import { AdminHeader, ContentNotice } from '@/components/admin/admin-ui'
+import { getSiteSettings } from '@/lib/data'
+import { saveSettings } from '@/app/actions/cms'
+import { AdminHeader } from '@/components/admin/admin-ui'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 
-export default async function AdminSettingsPage() {
-  await requireAdmin()
-
-  const fields: { label: string; value: string; name: string }[] = [
-    { label: 'Contact email', value: siteConfig.email, name: 'email' },
-    { label: 'Phone (display)', value: siteConfig.phoneDisplay, name: 'phone' },
-    { label: 'WhatsApp number', value: siteConfig.whatsapp, name: 'whatsapp' },
-    { label: 'Instagram URL', value: siteConfig.socials.instagram, name: 'instagram' },
-    { label: 'Facebook URL', value: siteConfig.socials.facebook, name: 'facebook' },
-    { label: 'YouTube URL', value: siteConfig.socials.youtube, name: 'youtube' },
-  ]
-
-  return (
-    <div className="max-w-2xl">
-      <AdminHeader
-        title="Site Settings"
-        description="Contact details, social links and site-wide content."
-      />
-      <div className="mb-6">
-        <ContentNotice />
-      </div>
-
-      <form className="space-y-5 rounded-xl border border-border bg-card p-6">
-        {fields.map((f) => (
-          <div key={f.name} className="space-y-2">
-            <Label htmlFor={f.name}>{f.label}</Label>
-            <Input id={f.name} name={f.name} defaultValue={f.value} disabled />
-          </div>
-        ))}
-        <div className="space-y-2">
-          <Label htmlFor="announcement">Announcement banner</Label>
-          <Input
-            id="announcement"
-            name="announcement"
-            placeholder="Optional site-wide announcement text"
-            disabled
-          />
-        </div>
-        <Button type="submit" disabled>
-          Save changes
-        </Button>
-        <p className="text-xs text-muted-foreground">
-          Saving is disabled until Supabase is connected. These values currently come from{' '}
-          <code className="rounded bg-muted px-1">lib/site-config.ts</code>.
-        </p>
-      </form>
-    </div>
-  )
-}
+const fields=[['contact_email','Contact email','contactEmail'],['phone','Phone','phone'],['whatsapp','WhatsApp','whatsapp'],['instagram_url','Instagram URL','instagramUrl'],['facebook_url','Facebook URL','facebookUrl'],['youtube_url','YouTube URL','youtubeUrl'],['tripadvisor_url','Tripadvisor URL','tripadvisorUrl'],['hero_headline','Hero headline','heroHeadline'],['hero_subheadline','Hero subheadline','heroSubheadline'],['announcement','Announcement','announcement'],['seo_title','SEO title','seoTitle']] as const
+export default async function Page(){await requireAdmin();const settings=await getSiteSettings();return <div className="max-w-2xl"><AdminHeader title="Site Settings" description="Contact details, social links, hero and search metadata."/><form action={saveSettings} className="space-y-4 rounded-xl border border-border bg-card p-6">{fields.map(([name,label,key])=><div className="space-y-2" key={name}><Label htmlFor={name}>{label}</Label><Input id={name} name={name} defaultValue={settings[key]}/></div>)}<div className="space-y-2"><Label htmlFor="seo_description">SEO description</Label><Textarea id="seo_description" name="seo_description" defaultValue={settings.seoDescription}/></div><Button type="submit">Save settings</Button></form></div>}
