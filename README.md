@@ -108,12 +108,28 @@ export const media = {
    NEXT_PUBLIC_SUPABASE_URL=
    NEXT_PUBLIC_SUPABASE_ANON_KEY=
    SUPABASE_SERVICE_ROLE_KEY=       # server only — never exposed to the browser
+   SUPABASE_SECRET_KEY=
+   ADMIN_EMAIL=admin@fathudives.com
+   ADMIN_PASSWORD=use-a-strong-temporary-password
    NEXT_PUBLIC_SITE_URL=https://fathudives.com
+   SMTP_HOST=smtp.titan.email
+   SMTP_PORT=465
+   SMTP_USER=contact@fathudives.com
+   SMTP_PASSWORD=your-mailbox-password
+   SMTP_FROM_EMAIL=Fathu Dives Website <contact@fathudives.com>
+   ENQUIRY_NOTIFICATION_EMAIL=contact@fathudives.com
    ```
-4. Sign up a user through Supabase Auth, then promote them:
-   ```sql
-   update public.profiles set role = 'super_admin' where email = 'you@example.com';
+
+   Use `smtp.titan.email` for Bluehost Professional Email/Titan. For Bluehost
+   cPanel Email, use the outgoing server shown under **Connect Devices**. Keep
+   the mailbox password server-side and configure SPF, DKIM, and DMARC in DNS.
+4. Create or update the first Supabase Auth administrator:
+   ```bash
+   npm run admin:create
    ```
+   This provisions the Auth user and assigns `super_admin` in `profiles`. Remove
+   `ADMIN_PASSWORD` after provisioning and never expose either server secret to
+   the browser.
 
 The data-access layer in `lib/data/` automatically uses Supabase when the env
 vars are present and falls back to mock data otherwise, so the UI never breaks

@@ -3,10 +3,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
-// Lightweight preview session used until the Supabase Auth user is provisioned.
-// It is checked even when the public Supabase URL/key are configured: those
-// credentials connect the database, but do not mean Auth has been set up yet.
-const DEV_SESSION_COOKIE = 'fathu_admin_session'
+export const DEV_SESSION_COOKIE = 'fathu_admin_session'
 export const DEMO_ADMIN_EMAIL = 'admin@fathudives.com'
 export const DEMO_ADMIN_PASSWORD = 'demo'
 
@@ -16,42 +13,42 @@ export type AdminUser = {
   role: 'super_admin' | 'admin' | 'editor'
 }
 
-// Returns the currently authenticated admin user, or null.
 export async function getAdminUser(): Promise<AdminUser | null> {
-  const store = await cookies()
-  if (store.get(DEV_SESSION_COOKIE)?.value === '1') {
-    return { id: 'dev-admin', email: DEMO_ADMIN_EMAIL, role: 'super_admin' }
+  if (process.env.NODE_ENV === 'development') {
+    const store = await cookies()
+    if (store.get(DEV_SESSION_COOKIE)?.value === '1') {
+      return { id: 'dev-admin', email: DEMO_ADMIN_EMAIL, role: 'super_admin' }
+    }
   }
 
   const supabase = await createClient()
+  if (!supabase) return null
 
-  if (supabase) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-    if (!user) return null
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return null
 
-    // Look up the profile row to confirm an admin role.
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('id, email, role')
-      .eq('id', user.id)
-      .single()
+  const metadataRole = user.app_metadata?.role
+  const validMetadataRole = ['super_admin', 'admin', 'editor'].includes(metadataRole)
 
-    if (!profile || !['super_admin', 'admin', 'editor'].includes(profile.role)) {
-      return null
-    }
-    return { id: profile.id, email: profile.email ?? '', role: profile.role }
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('id, email, role')
+    .eq('id', user.id)
+    .single()
+
+  if (profile && ['super_admin', 'admin', 'editor'].includes(profile.role)) {
+    return { id: profile.id, email: profile.email ?? user.email ?? '', role: profile.role }
   }
-
+  if (validMetadataRole) {
+    return { id: user.id, email: user.email ?? '', role: metadataRole as AdminUser['role'] }
+  }
   return null
 }
 
-// Guards a server component. Redirects to the login page when not signed in.
 export async function requireAdmin(): Promise<AdminUser> {
   const user = await getAdminUser()
   if (!user) redirect('/admin/login')
   return user
 }
-
-export { DEV_SESSION_COOKIE }

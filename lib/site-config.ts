@@ -7,7 +7,7 @@ export const siteConfig = {
   location: 'Dhangethi Island, South Ari Atoll, Maldives',
   atoll: 'South Ari Atoll · Maldives',
   // Placeholder contact details — replace with the client's confirmed information.
-  email: 'hello@fathudives.com',
+  email: 'contact@fathudives.com',
   phoneDisplay: '+960 000 0000',
   whatsapp: '9600000000', // digits only, placeholder
   whatsappMessage: 'Hello Fathu Dives! I would love to plan a diving trip to Dhangethi.',

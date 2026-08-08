@@ -2,6 +2,22 @@ import 'server-only'
 import type { Enquiry, EnquiryInput, EnquiryStatus } from '@/lib/types'
 import { createClient } from '@/lib/supabase/server'
 
+// Development fallback store. When Supabase is configured, all reads/writes go
+// through it instead. This keeps the app fully functional before credentials
+// are added, without hard-coding sample enquiries into components.
+const memoryStore: Enquiry[] = []
+
+function isMissingTableError(error: { code?: string; message?: string } | null) {
+  if (!error) return false
+  return (
+    ['PGRST204', 'PGRST205', '42P01'].includes(error.code ?? '') ||
+    /could not find the table|relation .* does not exist/i.test(error.message ?? '')
+  )
+}
+
+function warnSchemaMissing() {
+  console.warn('[Fathu Dives] Supabase enquiry tables are not installed; using the temporary in-memory store.')
+}
 function toRow(input: EnquiryInput) {
   return {
     full_name: input.fullName,
@@ -30,28 +46,47 @@ function toRow(input: EnquiryInput) {
 export async function createEnquiry(input: EnquiryInput): Promise<Enquiry> {
   const supabase = await createClient()
 
-  if (!supabase) throw new Error('Supabase is not configured.')
-  const { data, error } = await supabase.from('enquiries').insert(toRow(input)).select().single()
-  if (error) throw error
-  return mapRow(data)
+  if (supabase) {
+    const { data, error } = await supabase.from('enquiries').insert(toRow(input)).select().single()
+    if (!error) return mapRow(data)
+    if (!isMissingTableError(error)) throw error
+    warnSchemaMissing()
+  }
+
+  const enquiry: Enquiry = {
+    ...input,
+    id: `enq_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    status: 'new',
+    createdAt: new Date().toISOString(),
+  }
+  memoryStore.unshift(enquiry)
+  return enquiry
 }
 
 export async function updateEnquiryStatus(id: string, status: EnquiryStatus): Promise<void> {
   const supabase = await createClient()
-  if (!supabase) throw new Error('Supabase is not configured.')
-  const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
-  if (error) throw error
+  if (supabase) {
+    const { error } = await supabase.from('enquiries').update({ status }).eq('id', id)
+    if (!error) return
+    if (!isMissingTableError(error)) throw error
+    warnSchemaMissing()
+  }
+  const found = memoryStore.find((e) => e.id === id)
+  if (found) found.status = status
 }
 
 export async function getEnquiries(): Promise<Enquiry[]> {
   const supabase = await createClient()
-  if (!supabase) throw new Error('Supabase is not configured.')
-  const { data, error } = await supabase
+  if (supabase) {
+    const { data, error } = await supabase
       .from('enquiries')
       .select('*')
       .order('created_at', { ascending: false })
-  if (error) throw error
-  return (data ?? []).map(mapRow)
+    if (!error) return (data ?? []).map(mapRow)
+    if (!isMissingTableError(error)) throw error
+    warnSchemaMissing()
+  }
+  return memoryStore
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

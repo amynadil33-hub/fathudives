@@ -2,10 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-// Server-side Supabase client for authenticated Server Components, Route
-// Handlers, and Server Actions. It reads the user session from cookies. A
-// missing configuration is returned explicitly; production data callers throw
-// rather than silently falling back to the reference data in lib/data/*.ts.
+// Cookie-aware client for authenticated Server Components and Server Actions.
 export async function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -25,18 +22,14 @@ export async function createClient() {
             cookieStore.set(name, value, options),
           )
         } catch {
-          // The `setAll` method was called from a Server Component.
-          // This can be ignored if middleware refreshes sessions.
+          // Server Components cannot write cookies. The proxy refreshes them.
         }
       },
     },
   })
 }
 
-// Request-independent client for public content reads. Unlike createClient(),
-// this does not access cookies(), so it is safe in generateStaticParams,
-// generateMetadata, sitemap generation, and other build-time contexts. Public
-// visibility continues to be enforced by RLS and explicit active filters.
+// Request-independent client for public reads during prerendering.
 export function createPublicClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -52,8 +45,7 @@ export function createPublicClient() {
   })
 }
 
-// Admin client using the service-role key. NEVER import this into client code.
-// Only use inside server actions / route handlers for privileged operations.
+// Service-role client for privileged server-only operations.
 export function createAdminClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY

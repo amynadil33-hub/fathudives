@@ -19,9 +19,19 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     return { error: 'Please enter your email and password.' }
   }
 
-  // The preview login must remain available while the database is connected
-  // with an anon key but no Supabase Auth admin user has been provisioned.
-  if (email.toLowerCase() === DEMO_ADMIN_EMAIL && password === DEMO_ADMIN_PASSWORD) {
+  const supabase = await createClient()
+
+  if (supabase) {
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) return { error: 'Invalid credentials. Please try again.' }
+    redirect('/admin')
+  }
+
+  if (
+    process.env.NODE_ENV === 'development' &&
+    email.toLowerCase() === DEMO_ADMIN_EMAIL &&
+    password === DEMO_ADMIN_PASSWORD
+  ) {
     const store = await cookies()
     store.set(DEV_SESSION_COOKIE, '1', {
       httpOnly: true,
@@ -32,22 +42,13 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     redirect('/admin')
   }
 
-  const supabase = await createClient()
-
-  if (supabase) {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return { error: 'Invalid credentials. Please try again.' }
-    redirect('/admin')
-  }
-
-  return { error: 'Invalid credentials. While Supabase is not connected, use the demo login shown below.' }
+  return { error: 'Invalid credentials. Please try again.' }
 }
 
 export async function logout() {
   const supabase = await createClient()
-  if (supabase) {
-    await supabase.auth.signOut()
-  }
+  if (supabase) await supabase.auth.signOut()
+
   const store = await cookies()
   store.delete(DEV_SESSION_COOKIE)
   redirect('/admin/login')

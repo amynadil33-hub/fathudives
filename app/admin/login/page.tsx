@@ -22,7 +22,7 @@ export default async function AdminLoginPage() {
           </p>
         </div>
         <div className="rounded-2xl border border-border bg-card p-8 shadow-sm">
-          <LoginForm />
+          <LoginForm showDemoLogin={process.env.NODE_ENV === 'development' && !process.env.NEXT_PUBLIC_SUPABASE_URL} />
         </div>
       </div>
     </div>
