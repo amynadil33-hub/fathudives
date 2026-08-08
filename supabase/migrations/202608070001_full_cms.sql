@@ -47,6 +47,41 @@ create table if not exists public.adventure_options (
   constraint adventure_recommendation_type check (recommendation_type in ('package','course'))
 );
 
+-- Some early project databases already had placeholder versions of these
+-- tables. Complete those legacy shapes without replacing existing rows.
+alter table public.faqs
+  add column if not exists question text,
+  add column if not exists answer text,
+  add column if not exists active boolean not null default true,
+  add column if not exists sort_order integer not null default 0,
+  add column if not exists created_at timestamptz not null default now(),
+  add column if not exists updated_at timestamptz not null default now();
+
+alter table public.experiences
+  add column if not exists title text,
+  add column if not exists description text,
+  add column if not exists level text,
+  add column if not exists image text,
+  add column if not exists href text,
+  add column if not exists size text not null default 'regular',
+  add column if not exists featured boolean not null default false,
+  add column if not exists active boolean not null default true,
+  add column if not exists sort_order integer not null default 0,
+  add column if not exists created_at timestamptz not null default now(),
+  add column if not exists updated_at timestamptz not null default now();
+
+alter table public.adventure_options
+  add column if not exists label text,
+  add column if not exists description text,
+  add column if not exists recommendation_type text,
+  add column if not exists recommendation_slug text,
+  add column if not exists recommendation_label text,
+  add column if not exists featured boolean not null default false,
+  add column if not exists active boolean not null default true,
+  add column if not exists sort_order integer not null default 0,
+  add column if not exists created_at timestamptz not null default now(),
+  add column if not exists updated_at timestamptz not null default now();
+
 do $$ begin
   create trigger testimonials_updated_at before update on public.testimonials for each row execute function public.set_updated_at();
 exception when duplicate_object then null; end $$;
