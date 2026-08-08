@@ -6,6 +6,8 @@ import { BreadcrumbJsonLd } from '@/components/site/json-ld'
 import { getGalleryItems } from '@/lib/data'
 import { siteConfig } from '@/lib/site-config'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Gallery',
   description:

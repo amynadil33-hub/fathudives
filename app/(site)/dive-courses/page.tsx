@@ -8,6 +8,8 @@ import { getCourses } from '@/lib/data'
 import { media } from '@/lib/media'
 import { siteConfig } from '@/lib/site-config'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
   title: 'Dive Courses',
   description:

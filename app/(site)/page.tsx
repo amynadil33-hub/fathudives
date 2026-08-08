@@ -22,6 +22,8 @@ import {
 } from '@/lib/data'
 import { LocalBusinessJsonLd, FaqJsonLd } from '@/components/site/json-ld'
 
+export const revalidate = 60
+
 export default async function HomePage() {
   const [packages, sites, gallery, testimonials, faqs, experiences, adventureOptions, settings] = await Promise.all([
     getFeaturedPackages(),
