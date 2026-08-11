@@ -101,7 +101,7 @@ export async function submitEnquiry(
       message: 'Thank you. Your enquiry has been received.',
     }
   } catch (err) {
-    console.log('[Fathu Dives] enquiry submission failed:', err)
+    console.error('[Fathu Dives] enquiry submission failed:', err)
     return {
       status: 'error',
       message: 'Something went wrong while sending your enquiry. Please try again or reach us on WhatsApp.',
