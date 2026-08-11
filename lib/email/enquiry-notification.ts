@@ -1,6 +1,6 @@
 import 'server-only'
 
-import nodemailer from 'nodemailer'
+import { ENQUIRY_EMAIL, getEmailClient } from '@/lib/email'
 import type { EnquiryInput } from '@/lib/types'
 
 function display(value: string | number | undefined) {
@@ -12,21 +12,7 @@ function escapeHtml(value: string) {
 }
 
 export async function sendEnquiryNotification(input: EnquiryInput, packageTitle?: string) {
-  const host = process.env.SMTP_HOST?.trim()
-  const user = process.env.SMTP_USER?.trim()
-  const password = process.env.SMTP_PASSWORD
-  if (!host || !user || !password) {
-    console.warn('[Fathu Dives] email notification skipped: SMTP credentials are not configured')
-    return
-  }
-
-  const port = Number(process.env.SMTP_PORT || 465)
-  const transporter = nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465,
-    auth: { user, pass: password },
-  })
+  const { from, transporter } = getEmailClient()
 
   const rows: Array<[string, string | number | undefined]> = [
     ['Name', input.fullName], ['Email', input.email], ['WhatsApp', input.whatsapp],
@@ -41,12 +27,16 @@ export async function sendEnquiryNotification(input: EnquiryInput, packageTitle?
   const text = rows.map(([label, value]) => `${label}: ${display(value)}`).join('\n')
   const htmlRows = rows.map(([label, value]) => `<tr><th style="padding:8px 12px;text-align:left;vertical-align:top;border-bottom:1px solid #e5e7eb">${escapeHtml(label)}</th><td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;white-space:pre-wrap">${escapeHtml(display(value))}</td></tr>`).join('')
 
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM_EMAIL?.trim() || `Fathu Dives Website <${user}>`,
-    to: process.env.ENQUIRY_NOTIFICATION_EMAIL?.trim() || 'contact@fathudives.com',
+  const result = await transporter.sendMail({
+    from,
+    to: ENQUIRY_EMAIL,
     replyTo: input.email,
     subject: `${packageTitle ? 'Booking' : 'Contact'} enquiry from ${input.fullName}`,
     text,
     html: `<div style="font-family:Arial,sans-serif;color:#172554"><h1 style="font-size:24px">New website enquiry</h1><table style="width:100%;max-width:720px;border-collapse:collapse">${htmlRows}</table></div>`,
   })
+
+  if (result.rejected.length > 0 || result.accepted.length === 0) {
+    throw new Error(`SMTP server did not accept delivery to ${ENQUIRY_EMAIL}.`)
+  }
 }
