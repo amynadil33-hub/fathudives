@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { ENQUIRY_EMAIL, getEmailClient } from '@/lib/email'
+import { getEmailConfig, mailTransporter } from '@/lib/email'
 import type { EnquiryInput } from '@/lib/types'
 
 function display(value: string | number | undefined) {
@@ -13,6 +14,11 @@ function escapeHtml(value: string) {
 
 export async function sendEnquiryNotification(input: EnquiryInput, packageTitle?: string) {
   const { from, transporter } = getEmailClient()
+  const emailConfig = getEmailConfig()
+  if (!emailConfig) {
+    console.warn('[Fathu Dives] email notification skipped: SMTP credentials are not configured')
+    return
+  }
 
   const rows: Array<[string, string | number | undefined]> = [
     ['Name', input.fullName], ['Email', input.email], ['WhatsApp', input.whatsapp],
@@ -30,6 +36,9 @@ export async function sendEnquiryNotification(input: EnquiryInput, packageTitle?
   const result = await transporter.sendMail({
     from,
     to: ENQUIRY_EMAIL,
+  await mailTransporter.sendMail({
+    from: emailConfig.from,
+    to: emailConfig.notificationEmail,
     replyTo: input.email,
     subject: `${packageTitle ? 'Booking' : 'Contact'} enquiry from ${input.fullName}`,
     text,
