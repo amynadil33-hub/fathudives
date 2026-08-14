@@ -55,7 +55,8 @@ const mapPackage = (r: Row): Package => ({
   active:bool(r.active), sortOrder:number(r.sort_order),
 })
 const packageSelect = '*,package_inclusions(label,inclusion_type,sort_order),package_itinerary(day_number,title,description)'
-export async function getPackages(admin=false) { return withPublicFallback(admin,'Packages',async()=>{const s=await client(admin); let q=s.from('packages').select(packageSelect).order('base_price'); if(!admin) q=q.eq('active',true); const {data,error}=await q; fail('Could not load packages',error); return (data??[]).map(mapPackage)},[...fallbackPackages].sort((a,b)=>a.basePrice-b.basePrice)) }
+const packageOrder = (a:Package,b:Package) => (a.basePrice || Number.POSITIVE_INFINITY) - (b.basePrice || Number.POSITIVE_INFINITY)
+export async function getPackages(admin=false) { return withPublicFallback(admin,'Packages',async()=>{const s=await client(admin); let q=s.from('packages').select(packageSelect); if(!admin) q=q.eq('active',true); const {data,error}=await q; fail('Could not load packages',error); return (data??[]).map(mapPackage).sort(packageOrder)},[...fallbackPackages].sort(packageOrder)) }
 export const getAdminPackages = () => getPackages(true)
 export async function getFeaturedPackages(){ return (await getPackages()).filter(x=>x.featured) }
 export async function getPackageBySlug(slug:string, admin=false){return withPublicFallback(admin,'Package',async()=>{const s=await client(admin); let q=s.from('packages').select(packageSelect).eq('slug',slug); if(!admin) q=q.eq('active',true); const {data,error}=await q.maybeSingle(); fail('Could not load package',error); return data ? mapPackage(data as Row) : undefined},fallbackPackages.find(x=>x.slug===slug))}

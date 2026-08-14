@@ -39,7 +39,7 @@ export function FeaturedPackages({ packages }: { packages: Package[] }) {
             </Reveal>
             <Reveal delay={0.15}>
               <p className="mt-4 text-muted-foreground">
-                Every stay blends diving with authentic island life. All prices shown are temporary placeholders.
+                Every stay blends diving with authentic island life. Published rates include applicable government taxes.
               </p>
             </Reveal>
           </div>

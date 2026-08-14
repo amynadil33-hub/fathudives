@@ -35,7 +35,7 @@ export function CartPage() {
             </Link>
             <div className="min-w-0 flex-1">
               <Link href={`/dive-packages/${item.slug}`} className="font-serif text-2xl text-foreground hover:text-primary">{item.title}</Link>
-              <p className="mt-1 text-sm text-muted-foreground">{formatPrice(item.price, item.currency)} per guest</p>
+              <p className="mt-1 text-sm text-muted-foreground">Starting at {formatPrice(item.price, item.currency)} per guest</p>
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center rounded-full border border-border" aria-label="Number of guests">
                   <button type="button" onClick={() => updateGuests(item.packageId, item.guests - 1)} className="p-2" aria-label="Remove one guest"><Minus className="size-4" /></button>
@@ -56,7 +56,7 @@ export function CartPage() {
           <span>Package estimate</span><span>{formatPrice(subtotal, currency)}</span>
         </div>
         <div className="mt-5 flex items-end justify-between"><span>Total estimate</span><span className="font-serif text-3xl text-accent">{formatPrice(subtotal, currency)}</span></div>
-        <p className="mt-3 text-xs leading-relaxed text-primary-foreground/70">Prices are placeholders. Your dates, availability and final price will be confirmed before any payment.</p>
+        <p className="mt-3 text-xs leading-relaxed text-primary-foreground/70">This estimate uses the published starting rate. Occupancy, meal plan, dates, availability and final price will be confirmed before payment.</p>
         <Link href="/checkout" className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 font-medium text-accent-foreground">Continue to checkout <ArrowRight className="size-4" /></Link>
         <Link href="/dive-packages" className="mt-3 block text-center text-sm text-primary-foreground/75 hover:text-background">Continue browsing</Link>
       </aside>

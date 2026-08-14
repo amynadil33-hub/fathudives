@@ -174,7 +174,7 @@ export function PackagesExplorer({ packages }: { packages: Package[] }) {
       <div>
         <p className="mb-6 text-sm text-deep/60">
           Showing <span className="font-medium text-deep">{filtered.length}</span> of {packages.length} packages
-          <span className="ml-2 rounded-full bg-sand px-2 py-0.5 text-xs text-deep/70">Prices are placeholders</span>
+          <span className="ml-2 rounded-full bg-sand px-2 py-0.5 text-xs text-deep/70">Published package rates</span>
         </p>
         {filtered.length === 0 ? (
           <div className="rounded-3xl bg-seafoam/50 p-12 text-center">

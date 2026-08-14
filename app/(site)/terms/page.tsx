@@ -33,7 +33,7 @@ export default function TermsPage() {
         {
           heading: 'Pricing',
           paragraphs: [
-            'All prices shown on this website are temporary placeholders. Final pricing, inclusions and any applicable taxes or fees will be confirmed in your personal quotation.',
+            'Published package prices are starting rates based on occupancy and meal plan and include applicable government taxes. Your final price and inclusions will be confirmed in a personal quotation before payment.',
           ],
         },
         {

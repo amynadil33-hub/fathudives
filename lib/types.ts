@@ -47,7 +47,7 @@ export interface Package {
   transfersIncluded: boolean
   whaleShark: boolean
   manta: boolean
-  basePrice: number // placeholder
+  basePrice: number // 0 means a custom quote is required
   currency: string
   featured: boolean
   highlights: string[]

@@ -131,6 +131,13 @@ export const media = {
    This provisions the Auth user and assigns `super_admin` in `profiles`. Remove
    `ADMIN_PASSWORD` after provisioning and never expose either server secret to
    the browser.
+5. Import the real package catalog and other bundled content before removing the
+   temporary admin credentials:
+   ```bash
+   npm run content:seed
+   ```
+   The importer upserts the current packages by slug and deactivates retired
+   placeholder packages so they no longer appear on the public site.
 
 The data-access layer in `lib/data/` automatically uses Supabase when the env
 vars are present and falls back to mock data otherwise, so the UI never breaks

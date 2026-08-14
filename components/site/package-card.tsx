@@ -36,10 +36,10 @@ export function PackageCard({ pkg }: { pkg: Package }) {
 
         <ul className="mt-5 grid grid-cols-2 gap-2 text-xs text-muted-foreground">
           <li className="flex items-center gap-1.5">
-            <Moon className="size-3.5 text-slate-blue" /> {pkg.nights} nights
+            <Moon className="size-3.5 text-slate-blue" /> {pkg.nights > 0 ? `${pkg.nights} nights` : 'Flexible stay'}
           </li>
           <li className="flex items-center gap-1.5">
-            <Waves className="size-3.5 text-slate-blue" /> {pkg.dives} dives
+            <Waves className="size-3.5 text-slate-blue" /> {pkg.dives > 0 ? `${pkg.dives} dives` : 'Custom dives'}
           </li>
           {pkg.accommodationIncluded && (
             <li className="flex items-center gap-1.5">
@@ -61,8 +61,12 @@ export function PackageCard({ pkg }: { pkg: Package }) {
         <div className="mt-6 border-t border-border pt-5">
           <div className="flex items-end justify-between">
             <div>
-              <p className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">From (placeholder)</p>
-              <p className="font-serif text-2xl text-primary">{formatPrice(pkg.basePrice, pkg.currency)}</p>
+              <p className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
+                {pkg.basePrice > 0 ? 'From / person' : 'Tailored to you'}
+              </p>
+              <p className="font-serif text-2xl text-primary">
+                {pkg.basePrice > 0 ? formatPrice(pkg.basePrice, pkg.currency) : 'Custom quote'}
+              </p>
             </div>
             <Link
               href={`/dive-packages/${pkg.slug}`}
@@ -72,7 +76,7 @@ export function PackageCard({ pkg }: { pkg: Package }) {
               <ArrowRight className="size-4" />
             </Link>
           </div>
-          <AddToCartButton pkg={pkg} className="mt-3 w-full" />
+          {pkg.basePrice > 0 ? <AddToCartButton pkg={pkg} className="mt-3 w-full" /> : null}
         </div>
       </div>
     </article>

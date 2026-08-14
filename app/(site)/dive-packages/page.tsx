@@ -13,12 +13,12 @@ export const revalidate = 60
 export const metadata: Metadata = {
   title: 'Dive Packages',
   description:
-    'Explore Fathu Dives packages in South Ari Atoll — from beginner discovery trips to whale shark weeks and dive-and-island escapes on Dhangethi. Placeholder pricing shown until confirmed.',
+    'Explore Fathu Dives packages in South Ari Atoll, from four-night dive holidays to customizable shark and manta adventures.',
   alternates: { canonical: '/dive-packages' },
   openGraph: {
-    title: 'Dive Packages · Fathu Dives',
+    title: 'Dive Packages - Fathu Dives',
     description:
-      'Diving holidays on Dhangethi Island, South Ari Atoll — whale sharks, mantas, reefs and warm local hospitality.',
+      'Diving holidays on Dhangethi Island, South Ari Atoll - whale sharks, mantas, reefs and warm local hospitality.',
     url: `${siteConfig.url}/dive-packages`,
     images: [{ url: media.packages.explorer }],
   },
@@ -37,9 +37,9 @@ export default async function DivePackagesPage() {
       />
       <PageHero
         image={media.packages.explorer}
-        label="South Ari Atoll · Maldives"
+        label="South Ari Atoll - Maldives"
         title="Dive Packages"
-        intro="Complete diving holidays built around the wild heart of Dhangethi — reefs, big encounters and slow island days."
+        intro="Complete diving holidays built around the wild heart of Dhangethi - reefs, big encounters and slow island days."
         crumbs={[{ label: 'Home', href: '/' }, { label: 'Dive Packages' }]}
       />
 
@@ -58,7 +58,8 @@ export default async function DivePackagesPage() {
               <p className="mt-4 leading-relaxed text-muted-foreground">
                 Every package blends guided diving with authentic life on a Maldivian local island.
                 Filter by experience level, who you are travelling with, or the encounters you dream
-                of. All prices are temporary placeholders and will be confirmed by our team.
+                of. Published prices include applicable government taxes; customized packages are
+                quoted personally.
               </p>
             </Reveal>
           </div>

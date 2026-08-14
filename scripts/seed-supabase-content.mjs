@@ -121,6 +121,20 @@ const packageRows = packages.map((item, index) => ({
   active: item.active ?? true,
   sort_order: item.sortOrder ?? index,
 }))
+const packageSlugs = packageRows.map((item) => item.slug)
+const existingPackages = await checked(
+  'Existing package lookup failed',
+  supabase.from('packages').select('id,slug'),
+)
+const retiredPackageIds = existingPackages
+  .filter((item) => !packageSlugs.includes(item.slug))
+  .map((item) => item.id)
+if (retiredPackageIds.length > 0) {
+  await checked(
+    'Old package deactivation failed',
+    supabase.from('packages').update({ active: false }).in('id', retiredPackageIds),
+  )
+}
 const savedPackages = await checked(
   'Package import failed',
   supabase.from('packages').upsert(packageRows, { onConflict: 'slug' }).select('id,slug'),

@@ -10,7 +10,7 @@ export const testimonials: Testimonial[] = [
     id: 't-1',
     guestName: 'Placeholder Guest',
     country: 'Country',
-    tripType: 'Whale Shark Week',
+    tripType: 'Adventurer Dive Package',
     review:
       'This is placeholder testimonial text written to show how a guest review will appear. Real, verified reviews from Fathu Dives guests will replace this content.',
     guestImage: media.avatar,
@@ -30,7 +30,7 @@ export const testimonials: Testimonial[] = [
     id: 't-3',
     guestName: 'Placeholder Guest',
     country: 'Country',
-    tripType: 'Dive and Island Escape',
+    tripType: 'Basic Dive Package',
     review:
       'Placeholder text only. This section is designed to hold authentic reviews once they are confirmed — no ratings or sources are implied here.',
     guestImage: media.avatar,

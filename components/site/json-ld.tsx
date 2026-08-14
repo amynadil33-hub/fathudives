@@ -60,13 +60,17 @@ export function ProductJsonLd({ pkg }: { pkg: Package }) {
         name: pkg.title,
         description: pkg.shortDescription,
         image: `${siteConfig.url}${pkg.featuredImage}`,
-        offers: {
-          '@type': 'Offer',
-          priceCurrency: pkg.currency,
-          price: pkg.basePrice,
-          availability: 'https://schema.org/InStock',
-          url: `${siteConfig.url}/dive-packages/${pkg.slug}`,
-        },
+        ...(pkg.basePrice > 0
+          ? {
+              offers: {
+                '@type': 'Offer',
+                priceCurrency: pkg.currency,
+                price: pkg.basePrice,
+                availability: 'https://schema.org/InStock',
+                url: `${siteConfig.url}/dive-packages/${pkg.slug}`,
+              },
+            }
+          : {}),
       }}
     />
   )

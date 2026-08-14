@@ -43,14 +43,14 @@ export function BookingCard({ pkg }: { pkg: Package }) {
       <div className="flex items-end justify-between border-b border-border pb-5">
         <div>
           <p className="text-[0.65rem] uppercase tracking-wider text-muted-foreground">
-            From (placeholder)
+            {pkg.basePrice > 0 ? 'From / person' : 'Tailored to you'}
           </p>
           <p className="font-serif text-3xl text-primary">
-            {formatPrice(pkg.basePrice, pkg.currency)}
+            {pkg.basePrice > 0 ? formatPrice(pkg.basePrice, pkg.currency) : 'Custom quote'}
           </p>
         </div>
         <p className="text-right text-xs text-muted-foreground">
-          {pkg.nights} nights · {pkg.dives} dives
+          {pkg.nights > 0 ? `${pkg.nights} nights` : 'Flexible stay'} · {pkg.dives > 0 ? `${pkg.dives} dives` : 'Custom dives'}
         </p>
       </div>
 
@@ -133,7 +133,7 @@ export function BookingCard({ pkg }: { pkg: Package }) {
         </label>
       </div>
 
-      <AddToCartButton pkg={pkg} guests={guests} className="mt-6 w-full py-3" />
+      {pkg.basePrice > 0 ? <AddToCartButton pkg={pkg} guests={guests} className="mt-6 w-full py-3" /> : null}
 
       <CtaLink
         href={`/contact?${params.toString()}`}

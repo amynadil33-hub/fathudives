@@ -51,8 +51,8 @@ export default async function PackagePage({
   const excluded = pkg.inclusions.filter((i) => i.type === 'excluded')
 
   const facts = [
-    { icon: Moon, label: `${pkg.nights} nights` },
-    { icon: Waves, label: `${pkg.dives} dives` },
+    { icon: Moon, label: pkg.nights > 0 ? `${pkg.nights} nights` : 'Flexible stay' },
+    { icon: Waves, label: pkg.dives > 0 ? `${pkg.dives} dives` : 'Custom dives' },
     { icon: BedDouble, label: pkg.accommodationIncluded ? 'Stay included' : 'Stay optional' },
     { icon: Plane, label: pkg.transfersIncluded ? 'Transfers included' : 'Transfers optional' },
   ]
@@ -115,31 +115,31 @@ export default async function PackagePage({
                 ))}
               </ul>
 
-              <OceanDivider className="my-12" />
-
-              {/* Itinerary */}
-              <EditorialLabel>Day by day</EditorialLabel>
-              <h2 className="mt-4 font-serif text-3xl text-foreground">Your itinerary</h2>
-              <ol className="mt-8 space-y-8">
-                {pkg.itinerary.map((day) => (
-                  <li key={day.day} className="relative flex gap-5">
-                    <div className="flex flex-col items-center">
-                      <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary font-serif text-lg text-primary-foreground">
-                        {day.day}
-                      </span>
-                      {day.day < pkg.itinerary.length && (
-                        <span aria-hidden className="mt-2 w-px flex-1 bg-border" />
-                      )}
-                    </div>
-                    <div className="pb-2">
-                      <h3 className="font-serif text-xl text-foreground">{day.title}</h3>
-                      <p className="mt-1.5 leading-relaxed text-muted-foreground">
-                        {day.description}
-                      </p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+              {pkg.itinerary.length > 0 ? (
+                <>
+                  <OceanDivider className="my-12" />
+                  <EditorialLabel>Day by day</EditorialLabel>
+                  <h2 className="mt-4 font-serif text-3xl text-foreground">Your itinerary</h2>
+                  <ol className="mt-8 space-y-8">
+                    {pkg.itinerary.map((day) => (
+                      <li key={day.day} className="relative flex gap-5">
+                        <div className="flex flex-col items-center">
+                          <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary font-serif text-lg text-primary-foreground">
+                            {day.day}
+                          </span>
+                          {day.day < pkg.itinerary.length && (
+                            <span aria-hidden className="mt-2 w-px flex-1 bg-border" />
+                          )}
+                        </div>
+                        <div className="pb-2">
+                          <h3 className="font-serif text-xl text-foreground">{day.title}</h3>
+                          <p className="mt-1.5 leading-relaxed text-muted-foreground">{day.description}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              ) : null}
 
               <OceanDivider className="my-12" />
 
