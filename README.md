@@ -112,17 +112,18 @@ export const media = {
    ADMIN_EMAIL=admin@fathudives.com
    ADMIN_PASSWORD=use-a-strong-temporary-password
    NEXT_PUBLIC_SITE_URL=https://fathudives.com
-   SMTP_HOST=smtp.titan.email
+   SMTP_HOST=mail.your-domain.com
    SMTP_PORT=465
    SMTP_USER=contact@fathudives.com
    SMTP_PASSWORD=your-mailbox-password
-   SMTP_FROM_EMAIL=Fathu Dives Website <contact@fathudives.com>
-   ENQUIRY_NOTIFICATION_EMAIL=contact@fathudives.com
+   CONTACT_EMAIL=contact@fathudives.com
    ```
 
-   Use `smtp.titan.email` for Bluehost Professional Email/Titan. For Bluehost
-   cPanel Email, use the outgoing server shown under **Connect Devices**. Keep
-   the mailbox password server-side and configure SPF, DKIM, and DMARC in DNS.
+   This project sends through a Bluehost cPanel mailbox, so use the outgoing
+   server shown in Bluehost cPanel under **Email Accounts > Connect Devices**.
+   `SMTP_PASSWORD` is the password for the `contact@fathudives.com` mailbox,
+   which may differ from the Bluehost account password. Keep these values
+   server-side and configure SPF, DKIM, and DMARC in DNS.
 4. Create or update the first Supabase Auth administrator:
    ```bash
    npm run admin:create

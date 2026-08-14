@@ -2,9 +2,9 @@ import 'server-only'
 
 import nodemailer from 'nodemailer'
 
-export const ENQUIRY_EMAIL = 'contact@fathudives.com'
+type RequiredSmtpVariable = 'SMTP_HOST' | 'SMTP_USER' | 'SMTP_PASSWORD'
 
-function requiredEnvironmentVariable(name: 'SMTP_HOST' | 'SMTP_USER' | 'SMTP_PASSWORD') {
+function requiredEnvironmentVariable(name: RequiredSmtpVariable) {
   const value = process.env[name]?.trim()
   if (!value) throw new Error(`${name} is not configured in the deployment environment.`)
   return value
@@ -25,30 +25,13 @@ export function getEmailClient() {
       host,
       port,
       secure: port === 465,
+      requireTLS: port === 587,
       auth: { user, pass: password },
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
+      socketTimeout: 30_000,
     }),
-    from: process.env.SMTP_FROM_EMAIL?.trim() || `Fathu Dives Website <${user}>`,
-const smtpPort = Number(process.env.SMTP_PORT || 465)
-
-export const mailTransporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: smtpPort,
-  secure: smtpPort === 465,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-})
-
-export function getEmailConfig() {
-  const host = process.env.SMTP_HOST?.trim()
-  const user = process.env.SMTP_USER?.trim()
-  const password = process.env.SMTP_PASSWORD
-
-  if (!host || !user || !password) return null
-
-  return {
-    from: process.env.SMTP_FROM_EMAIL?.trim() || `Fathu Dives Website <${user}>`,
-    notificationEmail: process.env.ENQUIRY_NOTIFICATION_EMAIL?.trim() || 'contact@fathudives.com',
+    from: `"Fathu Dives Website" <${user}>`,
+    contactEmail: process.env.CONTACT_EMAIL?.trim() || 'contact@fathudives.com',
   }
 }

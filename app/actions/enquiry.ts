@@ -7,25 +7,25 @@ import { sendEnquiryNotification } from '@/lib/email/enquiry-notification'
 import type { EnquiryInput } from '@/lib/types'
 
 const enquirySchema = z.object({
-  fullName: z.string().min(2, 'Please enter your full name.'),
-  email: z.string().email('Please enter a valid email address.'),
-  whatsapp: z.string().optional(),
-  nationality: z.string().optional(),
+  fullName: z.string().trim().min(2, 'Please enter your full name.').max(120),
+  email: z.string().trim().email('Please enter a valid email address.').max(254),
+  whatsapp: z.string().trim().max(50).optional(),
+  nationality: z.string().trim().max(100).optional(),
   arrivalDate: z.string().optional(),
   departureDate: z.string().optional(),
   adults: z.coerce.number().int().min(1).max(30),
   children: z.coerce.number().int().min(0).max(30),
   numberOfDivers: z.coerce.number().int().min(0).max(30),
   diverStatus: z.string().min(1, 'Please select your diver status.'),
-  certificationLevel: z.string().optional(),
-  certificationAgency: z.string().optional(),
+  certificationLevel: z.string().trim().max(100).optional(),
+  certificationAgency: z.string().trim().max(100).optional(),
   loggedDives: z.coerce.number().int().min(0).optional(),
   packageId: z.string().optional(),
   accommodationRequired: z.coerce.boolean().optional(),
   equipmentRequired: z.coerce.boolean().optional(),
   transferRequired: z.coerce.boolean().optional(),
-  specialRequests: z.string().optional(),
-  message: z.string().optional(),
+  specialRequests: z.string().trim().max(2_000).optional(),
+  message: z.string().trim().max(5_000).optional(),
   consent: z
     .string()
     .optional()
@@ -91,10 +91,22 @@ export async function submitEnquiry(
       consent: true,
     }
 
-    await Promise.all([
-      createEnquiry(enquiry),
-      sendEnquiryNotification(enquiry, selectedPackage?.title),
-    ])
+    // Persist first so a temporary mail-provider failure can never lose the
+    // visitor's enquiry or incorrectly tell them that the form failed.
+    const savedEnquiry = await createEnquiry(enquiry)
+
+    try {
+      await sendEnquiryNotification(savedEnquiry, selectedPackage?.title)
+    } catch (emailError) {
+      console.error(
+        `[Fathu Dives] enquiry ${savedEnquiry.id} was saved, but email notification failed:`,
+        emailError,
+      )
+      return {
+        status: 'success',
+        message: 'Thank you. Your enquiry was saved, but our email notification was delayed. Please contact us on WhatsApp if your request is urgent.',
+      }
+    }
 
     return {
       status: 'success',
