@@ -6,7 +6,7 @@ import { media } from '@/lib/media'
 
 const moments = [
   { label: 'White sandy beaches', image: media.island.beach },
-  { label: 'Palm-lined island lanes', image: media.island.lane },
+  { label: 'Evenings by the jetty', image: media.island.jetty },
   { label: 'Sunset by the harbour', image: media.island.sunset },
   { label: 'Traditional boats', image: media.island.boats },
 ]
@@ -21,8 +21,8 @@ export function IslandExperience() {
             <div className="relative">
               <div className="mask-leaf relative aspect-[4/5] overflow-hidden shadow-xl">
                 <Image
-                  src={media.island.beach || '/placeholder.svg'}
-                  alt="A quiet white-sand beach on Dhangethi Island"
+                  src={media.island.aerial || '/placeholder.svg'}
+                  alt="Aerial view of Dhangethi Island and its white-sand beach"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"

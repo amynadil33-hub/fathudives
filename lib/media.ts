@@ -34,8 +34,9 @@ export const media = {
   },
 
   island: {
-    beach: '/images/dhangethi-aerial.png',
+    beach: '/images/island-beach.jpg',
     lane: '/images/dhangethi-aerial.png',
+    jetty: '/images/island-jetty.jpg',
     sunset: '/images/pkg-escape.png',
     boats: '/images/island-dhoni.png',
     aerial: '/images/dhangethi-aerial.png',
