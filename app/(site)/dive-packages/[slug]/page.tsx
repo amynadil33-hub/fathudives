@@ -11,6 +11,16 @@ import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/site/json-ld'
 import { getPackages, getPackageBySlug, getRelatedPackages } from '@/lib/data'
 import { siteConfig } from '@/lib/site-config'
 
+function inclusiveEncounterCopy(value: string) {
+  return value
+    .replace(/(\d+) whale shark dives?/gi, (_, count: string) =>
+      `${count} whale shark dive/snorkel${Number(count) === 1 ? '' : ' trips'}`,
+    )
+    .replace(/(\d+) manta(?: ray)? dives?/gi, (_, count: string) =>
+      `${count} manta dive/snorkel${Number(count) === 1 ? '' : ' trips'}`,
+    )
+}
+
 export async function generateStaticParams() {
   const packages = await getPackages()
   return packages.map((p) => ({ slug: p.slug }))
@@ -110,7 +120,7 @@ export default async function PackagePage({
                 {pkg.highlights.map((h) => (
                   <li key={h} className="flex items-start gap-3 text-foreground">
                     <Check className="mt-0.5 size-5 shrink-0 text-primary" />
-                    <span className="leading-relaxed">{h}</span>
+                    <span className="leading-relaxed">{inclusiveEncounterCopy(h)}</span>
                   </li>
                 ))}
               </ul>
@@ -151,7 +161,7 @@ export default async function PackagePage({
                     {included.map((item) => (
                       <li key={item.label} className="flex items-start gap-3 text-foreground">
                         <Check className="mt-0.5 size-5 shrink-0 text-primary" />
-                        <span>{item.label}</span>
+                        <span>{inclusiveEncounterCopy(item.label)}</span>
                       </li>
                     ))}
                   </ul>

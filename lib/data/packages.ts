@@ -26,6 +26,10 @@ function priceLine(label: string, prices: [number, number, number, number]) {
   return `${label} (${mealPlans}): USD ${prices.join(' / ')}`
 }
 
+function encounterLabel(count: number, animal: 'whale shark' | 'manta') {
+  return `${count} ${animal} dive/snorkel${count === 1 ? '' : ' trips'}`
+}
+
 function fixedPackage(input: FixedPackageInput): Package {
   const reefDives = input.dives - input.whaleSharkDives - input.mantaDives
 
@@ -52,15 +56,15 @@ function fixedPackage(input: FixedPackageInput): Package {
     highlights: [
       `${input.nights} nights in a deluxe twin or double room`,
       `${input.dives} guided dives in South Ari Atoll`,
-      `${input.whaleSharkDives} whale shark dive${input.whaleSharkDives === 1 ? '' : 's'} and ${input.mantaDives} manta dive${input.mantaDives === 1 ? '' : 's'}`,
+      `${encounterLabel(input.whaleSharkDives, 'whale shark')} and ${encounterLabel(input.mantaDives, 'manta')}`,
       'Free Ranveli or sandbank trip and beach dinner',
     ],
     inclusions: [
       { label: 'Return airport transfer by speedboat', type: 'included' },
       { label: `${input.nights} nights in a deluxe twin or double room`, type: 'included' },
       { label: 'Selected buffet meal plan', type: 'included' },
-      { label: `${input.whaleSharkDives} whale shark dive${input.whaleSharkDives === 1 ? '' : 's'}`, type: 'included' },
-      { label: `${input.mantaDives} manta ray dive${input.mantaDives === 1 ? '' : 's'}`, type: 'included' },
+      { label: encounterLabel(input.whaleSharkDives, 'whale shark'), type: 'included' },
+      { label: encounterLabel(input.mantaDives, 'manta'), type: 'included' },
       { label: `${reefDives} dives at other South Ari dive sites`, type: 'included' },
       { label: 'Water, coffee, tea, fruit and beach towels aboard the dhoni', type: 'included' },
       { label: 'Snacks on whale shark and manta trips', type: 'included' },

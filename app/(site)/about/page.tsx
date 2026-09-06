@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
-import { Anchor, ShieldCheck, HeartHandshake, Wrench, Ship, Leaf } from 'lucide-react'
+import { Anchor, ShieldCheck, HeartHandshake, Wrench, Ship, Leaf, MapPin, Navigation } from 'lucide-react'
 import { PageHero } from '@/components/site/page-hero'
 import {
   Section,
@@ -61,6 +61,10 @@ const values = [
   },
 ]
 
+const googleMapsPlaceId = 'ChIJHdsrBzrNQDsRUR7-3evK5xI'
+const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=Fathu+Dives%2C+Dhangethi&query_place_id=${googleMapsPlaceId}`
+const googleDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=Malaaz%2C+Ameeneemagu%2C+Adh.Dhangethi%2C+South+Ari+Atoll+00060%2C+Maldives&destination_place_id=${googleMapsPlaceId}`
+
 export default function AboutPage() {
   return (
     <>
@@ -114,6 +118,55 @@ export default function AboutPage() {
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-cover"
+                />
+              </div>
+            </Reveal>
+          </div>
+        </Container>
+      </Section>
+
+      {/* Location */}
+      <Section tone="seafoam">
+        <Container>
+          <div className="grid items-center gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+            <Reveal>
+              <EditorialLabel>Find us</EditorialLabel>
+              <h2 className="mt-4 font-serif text-4xl leading-tight text-foreground sm:text-5xl">
+                Visit us in Dhangethi
+              </h2>
+              <p className="mt-5 leading-relaxed text-muted-foreground">
+                Fathu Dives is on Dhangethi Island in South Ari Atoll, close to the harbour and the
+                island&apos;s guesthouses. Open the location in Google Maps or get directions from
+                wherever you are staying.
+              </p>
+              <div className="mt-6 flex items-start gap-3 text-foreground">
+                <MapPin className="mt-0.5 size-5 shrink-0 text-primary" />
+                <address className="not-italic leading-relaxed">
+                  Ameenee Magu, Dhangethi 00060<br />
+                  South Ari Atoll, Maldives
+                </address>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <CtaLink href={googleMapsUrl} external variant="primary">
+                  <MapPin className="size-4" />
+                  Open in Google Maps
+                </CtaLink>
+                <CtaLink href={googleDirectionsUrl} external variant="outline">
+                  <Navigation className="size-4" />
+                  Get directions
+                </CtaLink>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.1} direction="left">
+              <div className="overflow-hidden rounded-[2rem] border border-primary/10 bg-card shadow-sm">
+                <iframe
+                  title="Google Map showing Fathu Dives on Dhangethi Island"
+                  src={`https://www.google.com/maps?q=place_id:${googleMapsPlaceId}&output=embed`}
+                  className="h-[22rem] w-full sm:h-[28rem]"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
                 />
               </div>
             </Reveal>
