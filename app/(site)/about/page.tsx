@@ -61,6 +61,15 @@ const values = [
   },
 ]
 
+const team = [
+  { name: 'Fathu', role: 'Owner & Founder' },
+  { name: 'Fazal', role: 'Base Leader & Dive Instructor' },
+  { name: 'Silvia', role: 'Dive Guide' },
+  { name: 'Naail', role: 'Dive Guide' },
+  { name: 'Robin', role: 'Boat Crew' },
+  { name: 'Sohan', role: 'Boat Crew' },
+]
+
 const googleMapsPlaceId = 'ChIJHdsrBzrNQDsRUR7-3evK5xI'
 const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=Fathu+Dives%2C+Dhangethi&query_place_id=${googleMapsPlaceId}`
 const googleDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=Malaaz%2C+Ameeneemagu%2C+Adh.Dhangethi%2C+South+Ari+Atoll+00060%2C+Maldives&destination_place_id=${googleMapsPlaceId}`
@@ -233,30 +242,27 @@ export default function AboutPage() {
               </h2>
             </Reveal>
             <Reveal delay={0.15}>
-              <p className="mt-4 text-sm italic leading-relaxed text-muted-foreground">
-                Team profiles are placeholders. Real names, roles, certifications and photos will be
-                added once confirmed by the client — we don&apos;t invent staff details.
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                Meet the local team who will welcome you, guide your dives and look after every day
+                on the water.
               </p>
             </Reveal>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[1, 2, 3, 4].map((n) => (
-              <Reveal key={n} delay={Math.min(n * 0.06, 0.3)}>
-                <div className="overflow-hidden rounded-3xl border border-border bg-card">
-                  <div className="relative aspect-square bg-muted">
-                    <Image
-                      src={media.avatar || '/placeholder.svg'}
-                      alt=""
-                      fill
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      className="object-cover opacity-90"
-                    />
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {team.map((member, index) => (
+              <Reveal key={member.name} delay={Math.min(index * 0.06, 0.3)}>
+                <div className="flex h-full items-center gap-5 rounded-3xl border border-border bg-card p-6">
+                  <div
+                    aria-hidden
+                    className="flex size-16 shrink-0 items-center justify-center rounded-full bg-secondary font-serif text-3xl text-primary"
+                  >
+                    {member.name.charAt(0)}
                   </div>
-                  <div className="p-5 text-center">
-                    <p className="font-serif text-lg text-foreground">Team member</p>
-                    <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
-                      Role to be confirmed
+                  <div>
+                    <p className="font-serif text-2xl text-foreground">{member.name}</p>
+                    <p className="mt-1 text-sm uppercase tracking-wider text-muted-foreground">
+                      {member.role}
                     </p>
                   </div>
                 </div>
