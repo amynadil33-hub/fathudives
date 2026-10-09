@@ -45,7 +45,7 @@ export function Header() {
     <header
       className={cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-500',
-        solid
+        solid && !open
           ? 'bg-background/90 shadow-[0_1px_0_0_var(--border)] backdrop-blur-md'
           : 'bg-transparent',
       )}
@@ -53,7 +53,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 sm:px-6 md:h-20 lg:px-8">
         <Logo onDark={onDark} priority />
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-1 xl:flex">
           {navLinks.map((link) => {
             const active = pathname === link.href
             return (
@@ -61,7 +61,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'relative rounded-full px-3 py-2 text-sm font-medium transition-colors',
+                  'relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.8rem] font-medium transition-colors',
                   onDark
                     ? 'text-background/90 hover:text-background'
                     : active
@@ -101,7 +101,7 @@ export function Header() {
             aria-label="Open menu"
             aria-expanded={open}
             className={cn(
-              'inline-flex size-10 items-center justify-center rounded-full transition-colors lg:hidden',
+              'inline-flex size-10 items-center justify-center rounded-full transition-colors xl:hidden',
               onDark ? 'text-background hover:bg-background/10' : 'text-primary hover:bg-primary/5',
             )}
           >
@@ -113,7 +113,7 @@ export function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-50 lg:hidden"
+            className="fixed inset-0 z-50 xl:hidden"
             initial={reduce ? { opacity: 0 } : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -140,7 +140,7 @@ export function Header() {
 
               <nav
                 aria-label="Mobile"
-                className="flex flex-1 flex-col justify-center gap-1 px-6"
+                className="flex min-h-0 flex-1 flex-col justify-start gap-1 overflow-y-auto px-6 py-5 sm:justify-center"
               >
                 {navLinks.map((link, i) => (
                   <motion.div
@@ -151,7 +151,7 @@ export function Header() {
                   >
                     <Link
                       href={link.href}
-                      className="block border-b border-background/10 py-3 font-serif text-3xl text-background/90 transition-colors hover:text-accent"
+                      className="block border-b border-background/10 py-2.5 font-serif text-2xl text-background/90 transition-colors hover:text-accent sm:py-3 sm:text-3xl"
                     >
                       {link.label}
                     </Link>
@@ -159,7 +159,7 @@ export function Header() {
                 ))}
               </nav>
 
-              <div className="px-6 pb-10">
+              <div className="px-6 pb-6 pt-4 sm:pb-10">
                 <CtaLink href="/contact" variant="coral" size="lg" className="w-full">
                   Plan Your Dive
                 </CtaLink>

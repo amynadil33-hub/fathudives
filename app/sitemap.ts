@@ -11,6 +11,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/dive-packages',
     '/dive-courses',
     '/dive-sites',
+    '/excursions',
     '/discover-dhangethi',
     '/gallery',
     '/about',

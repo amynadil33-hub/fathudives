@@ -9,6 +9,7 @@ const diveLinks = [
   { label: 'Dive Packages', href: '/dive-packages' },
   { label: 'Dive Courses', href: '/dive-courses' },
   { label: 'Dive Sites', href: '/dive-sites' },
+  { label: 'Excursions', href: '/excursions' },
   { label: 'Gallery', href: '/gallery' },
 ]
 
@@ -120,7 +121,7 @@ export function SiteFooter() {
             </ul>
             <div className="rounded-2xl bg-background/5 p-4">
               <p className="text-xs text-primary-foreground/70">Newsletter — island stories &amp; dive updates</p>
-              <form className="mt-3 flex gap-2" aria-label="Newsletter signup (placeholder)">
+              <form className="mt-3 flex flex-col gap-2 sm:flex-row" aria-label="Newsletter signup (placeholder)">
                 <label htmlFor="footer-email" className="sr-only">
                   Email address
                 </label>
@@ -132,7 +133,7 @@ export function SiteFooter() {
                 />
                 <button
                   type="button"
-                  className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
+                  className="w-full rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 sm:w-auto"
                 >
                   Join
                 </button>

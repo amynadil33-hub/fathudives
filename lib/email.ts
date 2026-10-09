@@ -2,7 +2,7 @@ import 'server-only'
 
 import nodemailer from 'nodemailer'
 
-type RequiredSmtpVariable = 'SMTP_HOST' | 'SMTP_USER' | 'SMTP_PASSWORD'
+type RequiredSmtpVariable = 'SMTP_PASSWORD'
 
 function requiredEnvironmentVariable(name: RequiredSmtpVariable) {
   const value = process.env[name]?.trim()
@@ -11,8 +11,8 @@ function requiredEnvironmentVariable(name: RequiredSmtpVariable) {
 }
 
 export function getEmailClient() {
-  const host = requiredEnvironmentVariable('SMTP_HOST')
-  const user = requiredEnvironmentVariable('SMTP_USER')
+  const host = process.env.SMTP_HOST?.trim() || 'mail.fathudives.com'
+  const user = process.env.SMTP_USER?.trim() || 'contact@fathudives.com'
   const password = requiredEnvironmentVariable('SMTP_PASSWORD')
   const port = Number(process.env.SMTP_PORT || 465)
 

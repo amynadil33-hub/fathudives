@@ -29,6 +29,7 @@ export const navLinks = [
   { label: 'Dive Packages', href: '/dive-packages' },
   { label: 'Dive Courses', href: '/dive-courses' },
   { label: 'Dive Sites', href: '/dive-sites' },
+  { label: 'Excursions', href: '/excursions' },
   { label: 'Discover Dhangethi', href: '/discover-dhangethi' },
   { label: 'Gallery', href: '/gallery' },
   { label: 'About Us', href: '/about' },
